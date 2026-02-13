@@ -32,10 +32,10 @@ const STAGE1_PD_VARIABLES = (
     </div>
     <div className="space-y-0.5 pl-0.5 leading-relaxed">
       <strong className="text-white font-semibold">Our model:</strong><br />
-      <em>R</em> = <em>B</em> − <em>C</em> = 0.02<br />
-      <em>S</em> = −<em>C</em> = −0.01<br />
       <em>T</em> = <em>B</em> = 0.03<br />
-      <em>P</em> = 0
+      <em>R</em> = <em>B</em> − <em>C</em> = 0.02<br />
+      <em>P</em> = 0<br />
+      <em>S</em> = −<em>C</em> = −0.01
     </div>
     <div className="pl-0.5 leading-relaxed">
       <strong className="text-white font-semibold">T &gt; R &gt; P &gt; S and <em className="text-white">B</em> &gt; <em className="text-white">C</em></strong>
@@ -156,6 +156,14 @@ function formatParamValue(value: number, key: keyof SimulationParams): string {
   return value.toFixed(decimals);
 }
 
+/** Format a PD payoff value for display (e.g. 0.02, -0.01). */
+function formatPdValue(v: number): string {
+  const abs = Math.abs(v);
+  if (abs >= 1) return v.toFixed(2);
+  const decimals = abs < 0.01 ? 4 : abs < 0.1 ? 3 : 2;
+  return v.toFixed(decimals);
+}
+
 function EditableParametersTable({
   params,
   onParamChange,
@@ -172,18 +180,17 @@ function EditableParametersTable({
     setEditing({});
   };
 
+  const B = params.benefit ?? DEFAULT_PARAMS.benefit;
+  const C = params.cost ?? DEFAULT_PARAMS.cost;
+  const R = B - C;
+  const S = -C;
+  const T = B;
+  const P = 0;
+  const pdInequalitiesHold = T > R && R > P && P > S && B > C;
+
   return (
     <div className="absolute right-24 top-1/2 -translate-y-1/2 w-80 z-10 max-h-[85vh] overflow-y-auto">
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <h3 className="text-sm font-semibold text-white text-center flex-1">Parameters</h3>
-        <button
-          type="button"
-          onClick={handleReset}
-          className="shrink-0 px-2 py-1 text-xs font-medium rounded bg-slate-600 hover:bg-slate-500 text-white"
-        >
-          Reset
-        </button>
-      </div>
+      <h3 className="text-sm font-semibold text-white text-center mb-2">Parameters</h3>
       <div className="text-slate-400 text-xs mb-3 space-y-1.5">
         <p className="font-semibold text-white">Prisoner&apos;s Dilemma Variables</p>
         <div className="space-y-0.5 pl-0.5 leading-relaxed">
@@ -195,15 +202,25 @@ function EditableParametersTable({
           <em>P</em> = punishment (both defect)
         </div>
         <div className="space-y-0.5 pl-0.5 leading-relaxed">
-          <strong className="text-white font-semibold">Our model:</strong><br />
-          <em>R</em> = <em>B</em> − <em>C</em> = 0.02<br />
-          <em>S</em> = −<em>C</em> = −0.01<br />
-          <em>T</em> = <em>B</em> = 0.03<br />
-          <em>P</em> = 0
+          <strong className="text-white font-semibold">Your model:</strong><br />
+          <em>T</em> = <em>B</em> = {formatPdValue(T)}<br />
+          <em>R</em> = <em>B</em> − <em>C</em> = {formatPdValue(R)}<br />
+          <em>P</em> = {formatPdValue(P)}<br />
+          <em>S</em> = −<em>C</em> = {formatPdValue(S)}
         </div>
-        <div className="pl-0.5 leading-relaxed">
+        <div className="pl-0.5 leading-relaxed flex items-center gap-1.5">
           <strong className="text-white font-semibold">T &gt; R &gt; P &gt; S and <em className="text-white">B</em> &gt; <em className="text-white">C</em></strong>
+          <span aria-hidden>{pdInequalitiesHold ? '✅' : '❌'}</span>
         </div>
+      </div>
+      <div className="flex justify-center mb-2">
+        <button
+          type="button"
+          onClick={handleReset}
+          className="px-2 py-1 text-xs font-medium rounded bg-slate-600 hover:bg-slate-500 text-white"
+        >
+          Reset
+        </button>
       </div>
       <div className="rounded-lg border border-slate-700 overflow-hidden">
         <table className="w-full text-xs table-fixed">
