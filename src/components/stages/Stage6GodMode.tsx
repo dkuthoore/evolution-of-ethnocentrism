@@ -17,7 +17,7 @@ export function Stage6GodMode() {
 
   return (
     <div className="h-full flex flex-col items-center justify-center gap-6 px-4 overflow-auto">
-      <h2 className="text-2xl font-bold text-white">Stage 6: God Mode</h2>
+      <h2 className="text-2xl font-bold text-white">God Mode</h2>
       <p className="text-slate-400 text-center max-w-xl">
         Tweak the parameters. Use the brush to paint, the meteor to clear, or inspect any Pip.
       </p>

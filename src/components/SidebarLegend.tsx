@@ -1,6 +1,13 @@
 import { STRATEGY_COLORS } from '../lib/constants';
 import type { Phenotype } from '../lib/constants';
 
+const PHENOTYPE_LABELS: Record<Phenotype, string> = {
+  altruist: 'Altruist',
+  ethnocentric: 'Ethnocentrist',
+  egoist: 'Egoist',
+  traitor: 'Traitor',
+};
+
 const LEGEND_ITEMS: { phenotype: Phenotype; definition: string }[] = [
   { phenotype: 'altruist', definition: 'Helps everyone' },
   { phenotype: 'ethnocentric', definition: 'Helps same color, ignores others' },
@@ -11,7 +18,7 @@ const LEGEND_ITEMS: { phenotype: Phenotype; definition: string }[] = [
 export function SidebarLegend() {
   return (
     <aside
-      className="absolute left-8 top-1/2 -translate-y-1/2 w-44 px-3 py-4 z-10"
+      className="absolute left-12 top-1/2 -translate-y-1/2 w-64 px-3 py-4 z-10"
       role="navigation"
       aria-label="Pip strategy legend"
     >
@@ -29,10 +36,10 @@ export function SidebarLegend() {
                 aria-hidden
               />
               <span
-                className="font-medium capitalize text-sm"
+                className="font-medium text-sm"
                 style={{ color: STRATEGY_COLORS[phenotype] }}
               >
-                {phenotype}
+                {PHENOTYPE_LABELS[phenotype]}
               </span>
             </div>
             <span className="text-slate-500 text-xs">{definition}</span>

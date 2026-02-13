@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback, useState } from 'react';
 import type { MouseEvent, MutableRefObject, ReactNode } from 'react';
-import { useSimulation } from '../hooks/useSimulation';
+import { useSimulation, type SimulationEngineApi } from '../hooks/useSimulation';
 import { createAgentWithPhenotype, getPhenotype } from '../lib/engine';
 import type { Agent } from '../lib/engine';
 import { getGridIndexFromMouse } from '../lib/canvasUtils';
@@ -43,6 +43,8 @@ export interface SimulationWidgetProps {
   /** Enable brush, meteor, inspect tools */
   allowPainting?: boolean;
   extraControls?: ReactNode;
+  /** 'greenRed': Play=green, Pause=red (for stage coherence with Stage 2) */
+  playPauseVariant?: 'default' | 'greenRed';
 }
 
 type GodTool = 'none' | 'brush' | 'meteor' | 'inspect';
@@ -65,6 +67,7 @@ export function SimulationWidget({
   onReady,
   allowPainting = false,
   extraControls,
+  playPauseVariant = 'default',
 }: SimulationWidgetProps) {
   const [activeTool, setActiveTool] = useState<GodTool>('none');
   const [brushPhenotype, setBrushPhenotype] = useState<Phenotype>('ethnocentric');
@@ -87,6 +90,13 @@ export function SimulationWidget({
     enableHistory,
     params,
     initialSpeedIndex,
+    onEngineReady:
+      simApiRef || onReady
+        ? (api: SimulationEngineApi) => {
+            if (simApiRef) simApiRef.current = api;
+            onReady?.(api);
+          }
+        : undefined,
   });
 
   useEffect(() => {
@@ -95,20 +105,10 @@ export function SimulationWidget({
   }, []);
 
   useEffect(() => {
-    const api = {
-      seedByDistribution: sim.seedByDistribution,
-      seedTwoGroups: sim.seedTwoGroups,
-      reset: sim.reset,
-      setCell: sim.setCell,
-      clearRegion: sim.clearRegion,
-      setParams: sim.setParams,
-    };
-    if (simApiRef) simApiRef.current = api;
-    onReady?.(api);
     return () => {
       if (simApiRef) simApiRef.current = null;
     };
-  }, [sim, simApiRef, onReady]);
+  }, [simApiRef]);
 
   const handleReset = () => {
     if (onReset) {
@@ -184,7 +184,13 @@ export function SimulationWidget({
         <div className="flex gap-2">
           <button
             onClick={sim.isRunning ? sim.pause : sim.play}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white font-medium"
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium ${
+              playPauseVariant === 'greenRed'
+                ? sim.isRunning
+                  ? 'bg-red-600 hover:bg-red-500'
+                  : 'bg-green-600 hover:bg-green-500'
+                : 'bg-blue-600 hover:bg-blue-500'
+            }`}
           >
             {sim.isRunning ? <Pause size={18} /> : <Play size={18} />}
             {sim.isRunning ? 'Pause' : 'Play'}

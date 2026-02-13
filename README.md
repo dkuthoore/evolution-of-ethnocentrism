@@ -1,6 +1,6 @@
 # The Evolution of Ethnocentrism
 
-An interactive, educational web simulation inspired by Nicky Case's [The Evolution of Trust](https://ncase.me/trust/), translating the Hammond & Axelrod (2006) paper *"The Evolution of Ethnocentrism"* into an explorable explanation.
+An interactive, educational web simulation inspired by Nicky Case's [The Evolution of Trust](https://ncase.me/trust/), translating the Hammond & Axelrod (2006) paper [*"The Evolution of Ethnocentrism"*](https://artisresearch.com/files/articles/axelrod_evolution_of_ethnocentrism.pdf) into an explorable explanation.
 
 ## Run
 
@@ -40,14 +40,6 @@ Expected: Ethnocentrism ≥65% in final 100 periods (paper reports ~76%).
 - **Vanilla HTML5 Canvas** for grid rendering (2500 cells)
 - **Vitest** for unit tests
 
-## Structure
-
-- **Section 1 (Explainer):** Interactive tutorial with 3×3 canvas, COST/BENEFIT demo, strategy types
-- **Section 2 (Main Sandbox):** Full 50×50 grid, Play/Pause, speed control, scenario modes, demographics
-
-## Paper
-
-Hammond, R. A., & Axelrod, R. (2006). The Evolution of Ethnocentrism. *Journal of Conflict Resolution*, 50(6), 926-936.
 
 ## License
 

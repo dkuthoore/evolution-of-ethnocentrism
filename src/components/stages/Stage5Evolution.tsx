@@ -7,7 +7,7 @@ export function Stage5Evolution() {
 
   return (
     <div className="h-full flex flex-col items-center justify-center gap-6 px-4 overflow-auto">
-      <h2 className="text-2xl font-bold text-white">Stage 5: The Grand Evolution</h2>
+      <h2 className="text-2xl font-bold text-white">The Grand Evolution</h2>
       <p className="text-slate-400 text-center max-w-xl">
         Until now, color meant strategy. In nature, behavior is hidden in genes. What if anyone can mutate into anything? Ethnocentrism emerges even from a blank slate.
       </p>

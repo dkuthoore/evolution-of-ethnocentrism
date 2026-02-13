@@ -1,18 +1,35 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useSimulation } from '../../hooks/useSimulation';
 import { createAgentWithPhenotype } from '../../lib/engine';
-import type { Phenotype } from '../../lib/constants';
+import { STRATEGY_COLORS, type Phenotype } from '../../lib/constants';
 
 const GRID_SIZE = 5;
 const CANVAS_SIZE = 120;
 
-interface MiniGridProps {
-  phenotype: Phenotype;
+const PHENOTYPE_PLURAL_LABELS: Record<Phenotype, string> = {
+  altruist: 'Altruists',
+  ethnocentric: 'Ethnocentrists',
+  egoist: 'Egoists',
+  traitor: 'Traitors',
+};
+
+export interface Stage2GridControl {
+  play: () => void;
+  pause: () => void;
+  resetAndSeed: () => void;
 }
 
-function MiniGrid({ phenotype }: MiniGridProps) {
+interface MiniGridProps {
+  phenotype: Phenotype;
+  index: number;
+  controlsRef: React.MutableRefObject<(Stage2GridControl | null)[]>;
+  speedIndex: number;
+}
+
+function MiniGrid({ phenotype, index, controlsRef, speedIndex }: MiniGridProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particleCanvasRef = useRef<HTMLCanvasElement>(null);
+  const seedRef = useRef<() => void>(() => {});
 
   const sim = useSimulation(canvasRef, particleCanvasRef, {
     scenario: 'standard',
@@ -25,55 +42,84 @@ function MiniGrid({ phenotype }: MiniGridProps) {
     usePips: true,
     enableParticles: false,
     enableHistory: false,
-    initialSpeedIndex: 0,
+    initialSpeedIndex: speedIndex,
+    params: { mutationRate: 0, immigrationRate: 0 },
   });
+
+  useEffect(() => {
+    sim.setSpeedIndex(speedIndex);
+  }, [speedIndex, sim.setSpeedIndex]);
+
+  const INITIAL_PIP_COUNT = 8;
 
   const seed = () => {
     const engine = sim.engineRef.current;
     if (!engine) return;
     const size = GRID_SIZE * GRID_SIZE;
-    for (let i = 0; i < size; i++) {
-      engine.setCell(i, createAgentWithPhenotype(phenotype, 0));
+    engine.reset();
+    const indices = Array.from({ length: size }, (_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j]!, indices[i]!];
+    }
+    for (let k = 0; k < INITIAL_PIP_COUNT && k < indices.length; k++) {
+      engine.setCell(indices[k]!, createAgentWithPhenotype(phenotype, 0));
     }
     sim.draw();
   };
+
+  seedRef.current = seed;
 
   useEffect(() => {
     seed();
   }, [phenotype]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    controlsRef.current[index] = {
+      play: sim.play,
+      pause: sim.pause,
+      resetAndSeed: () => {
+        sim.reset();
+        seedRef.current();
+      },
+    };
+    return () => {
+      controlsRef.current[index] = null;
+    };
+  }, [index, controlsRef, sim.play, sim.pause, sim.reset]);
+
   return (
     <div className="flex flex-col gap-1 items-center">
-      <span className="text-xs font-medium text-slate-300 capitalize">{phenotype}s</span>
+      <span className="text-xs font-medium text-slate-300">{PHENOTYPE_PLURAL_LABELS[phenotype]}</span>
       <div className="relative">
         <canvas ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} className="block rounded border border-slate-600" />
         <canvas ref={particleCanvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} className="absolute inset-0 pointer-events-none" aria-hidden />
-      </div>
-      <div className="flex gap-1">
-        <button onClick={sim.isRunning ? sim.pause : sim.play} className="px-2 py-1 text-xs bg-slate-600 hover:bg-slate-500 rounded text-white">
-          {sim.isRunning ? 'Pause' : 'Play'}
-        </button>
-        <button onClick={seed} className="px-2 py-1 text-xs bg-slate-600 hover:bg-slate-500 rounded text-white">
-          Reset
-        </button>
       </div>
     </div>
   );
 }
 
-const PARAMETERS = [
-  { param: 'Cost', description: 'PTR −1% when donating. Giving is costly.' },
-  { param: 'Benefit', description: 'PTR +3% when receiving. Receiving helps.' },
-  { param: 'BasePTR', description: 'PTR reset to 12% at start of each tick.' },
-  { param: 'MutationRate', description: '0.5% chance per trait mutation per offspring.' },
-  { param: 'DeathRate', description: '10% chance per agent per tick to die. Creates space.' },
-  { param: 'ImmigrationRate', description: 'New agents added per tick (1 = max one).' },
-];
-
 export function Stage2Homogeneous() {
+  const controlsRef = useRef<(Stage2GridControl | null)[]>([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [speedSlider, setSpeedSlider] = useState(4); // 1–5; actual speedIndex = speedSlider - 1
+
+  const playAll = () => {
+    controlsRef.current.forEach((c) => c?.play());
+    setIsPlaying(true);
+  };
+  const pauseAll = () => {
+    controlsRef.current.forEach((c) => c?.pause());
+    setIsPlaying(false);
+  };
+  const resetAll = () => {
+    pauseAll();
+    controlsRef.current.forEach((c) => c?.resetAndSeed());
+  };
+
   return (
     <div className="h-full flex flex-col px-4 overflow-hidden relative">
-      <h2 className="text-2xl font-bold text-white text-center mt-4 mb-2 shrink-0">Stage 2: Like Meets Like</h2>
+      <h2 className="text-2xl font-bold text-white text-center mt-4 mb-2 shrink-0">Pip Strategies</h2>
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-4">
         <div className="flex flex-col items-center gap-5 shrink-0">
           <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5">
@@ -84,53 +130,60 @@ export function Stage2Homogeneous() {
             <ol className="text-slate-400 text-sm list-decimal list-inside space-y-2 mb-5 pl-1">
               <li>Each Pip starts with a PTR of 12%</li>
               <li>Neighboring Pips interact with each other (or don&apos;t)</li>
-              <li>They reproduce</li>
+              <li>They have a chance (PTR %) to reproduce </li>
+              <li>10% chance each Pip dies on each round</li>
               <li>PTRs reset to 12% for the next round. Repeat.</li>
             </ol>
-            <p className="text-slate-400 text-sm font-medium mb-2">Also:</p>
-            <ul className="text-slate-400 text-sm list-disc list-inside space-y-2 pl-1">
-              <li>10% chance a Pip dies on each round</li>
-              <li>0.5% chance a Pip&apos;s offspring mutates to a different type</li>
-              <li>Empty cells: up to 1 new Pip added per round (immigration)</li>
-            </ul>
           </div>
           <p className="text-slate-400 text-center max-w-xl">
-            Watch how each strategy survives in isolation. Altruists and Ethnocentrics thrive. Egoists and Traitors go extinct — selfishness is a death sentence.
+            Let&apos;s see how each strategy survives on it&apos;s own!{' '}
+            <span style={{ color: STRATEGY_COLORS.altruist }}>Altruists</span> and{' '}
+            <span style={{ color: STRATEGY_COLORS.ethnocentric }}>Ethnocentrists</span> help each other and thus thrive.{' '}
+            <span style={{ color: STRATEGY_COLORS.egoist }}>Egoists</span> and{' '}
+            <span style={{ color: STRATEGY_COLORS.traitor }}>Traitors</span> are selfish and quickly go extinct.*
           </p>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            <MiniGrid phenotype="altruist" />
-            <MiniGrid phenotype="ethnocentric" />
-            <MiniGrid phenotype="egoist" />
-            <MiniGrid phenotype="traitor" />
+            <MiniGrid phenotype="altruist" index={0} controlsRef={controlsRef} speedIndex={speedSlider - 1} />
+            <MiniGrid phenotype="ethnocentric" index={1} controlsRef={controlsRef} speedIndex={speedSlider - 1} />
+            <MiniGrid phenotype="egoist" index={2} controlsRef={controlsRef} speedIndex={speedSlider - 1} />
+            <MiniGrid phenotype="traitor" index={3} controlsRef={controlsRef} speedIndex={speedSlider - 1} />
           </div>
-          <p className="text-amber-400/90 text-sm text-center">
-            Selfishness is a death sentence in isolation.
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex gap-2">
+              <button
+                onClick={isPlaying ? pauseAll : playAll}
+                className={`px-4 py-2 text-sm rounded text-white font-medium ${isPlaying ? 'bg-red-600 hover:bg-red-500' : 'bg-green-600 hover:bg-green-500'}`}
+              >
+                {isPlaying ? 'Pause' : 'Play'}
+              </button>
+              <button onClick={resetAll} className="px-4 py-2 text-sm bg-slate-600 hover:bg-slate-500 rounded text-white font-medium">
+                Reset
+              </button>
+            </div>
+            <div className="flex items-center gap-2">
+              <label htmlFor="stage2-speed" className="text-slate-400 text-sm whitespace-nowrap">
+                Speed
+              </label>
+              <input
+                id="stage2-speed"
+                type="range"
+                min={1}
+                max={5}
+                step={1}
+                value={speedSlider}
+                onChange={(e) => setSpeedSlider(Number(e.target.value))}
+                className="w-28 h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-sky-500"
+              />
+              <span className="text-slate-300 text-sm tabular-nums min-w-[1.5rem]">
+                {speedSlider}
+              </span>
+            </div>
+          </div>
+          <p className="text-slate-500 text-xs italic text-center max-w-lg mt-2">
+            *Note: Due to randomness, sometimes the{' '}
+            <span style={{ color: STRATEGY_COLORS.altruist }}>Altruists</span>/
+            <span style={{ color: STRATEGY_COLORS.ethnocentric }}>Ethnocentrists</span> go extinct... reset and try the simulation a few times and you will see their strategies usually prevail.
           </p>
-        </div>
-      </div>
-      <div className="absolute right-12 top-1/2 -translate-y-1/2 w-64 z-10">
-        <h3 className="text-sm font-semibold text-white mb-2 text-center">Parameters</h3>
-        <div className="rounded-lg border border-slate-700 overflow-hidden">
-          <table className="w-full text-xs table-fixed">
-            <colgroup>
-              <col className="w-28" />
-              <col className="w-auto" />
-            </colgroup>
-            <thead>
-              <tr className="bg-slate-800 text-slate-300">
-                <th className="px-2 py-1.5 text-left font-medium">Param</th>
-                <th className="px-2 py-1.5 text-left font-medium">What it does</th>
-              </tr>
-            </thead>
-            <tbody>
-              {PARAMETERS.map(({ param, description }) => (
-                <tr key={param} className="border-t border-slate-700">
-                  <td className="px-2 py-1.5 text-slate-200 font-medium">{param}</td>
-                  <td className="px-2 py-1.5 text-slate-400">{description}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       </div>
     </div>

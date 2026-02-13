@@ -14,7 +14,11 @@ function createInitialAgents() {
   return [createAgentWithPhenotype('altruist', 0), createAgentWithPhenotype('altruist', 0)];
 }
 
-export function Stage1Basics() {
+interface Stage1BasicsProps {
+  onCooperate?: () => void;
+}
+
+export function Stage1Basics({ onCooperate }: Stage1BasicsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particleCanvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<ParticleSystem | null>(null);
@@ -93,8 +97,9 @@ export function Stage1Basics() {
       numberDelayMs: 900,
     });
     setHasCooperated(true);
+    onCooperate?.();
     animateParticles();
-  }, [animateParticles]);
+  }, [animateParticles, onCooperate]);
 
   const handleReset = useCallback(() => {
     agentsRef.current = createInitialAgents();
@@ -110,7 +115,7 @@ export function Stage1Basics() {
 
   return (
     <div className="h-full flex flex-col px-4 overflow-hidden relative">
-      <h2 className="text-2xl font-bold text-white text-center mt-4 mb-2 shrink-0">Stage 1: The Basics</h2>
+      <h2 className="text-2xl font-bold text-white text-center mt-4 mb-2 shrink-0">Meet the Pips</h2>
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-4">
         <div className="flex flex-col items-center gap-4 shrink-0">
           <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5">
@@ -154,35 +159,6 @@ export function Stage1Basics() {
           </div>
         </div>
       </div>
-      {hasCooperated && (
-        <div className="absolute right-12 top-1/2 -translate-y-1/2 w-64 z-10">
-          <h3 className="text-sm font-semibold text-white mb-2 text-center">Parameters</h3>
-          <div className="rounded-lg border border-slate-700 overflow-hidden">
-            <table className="w-full text-xs table-fixed">
-              <colgroup>
-                <col className="w-16" />
-                <col className="w-auto" />
-              </colgroup>
-              <thead>
-                <tr className="bg-slate-800 text-slate-300">
-                  <th className="px-2 py-1.5 text-left font-medium">Param</th>
-                  <th className="px-2 py-1.5 text-left font-medium">What it does</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-t border-slate-700">
-                  <td className="px-2 py-1.5 text-slate-200 font-medium">Cost</td>
-                  <td className="px-2 py-1.5 text-slate-400">PTR −1% when donating. Giving is costly.</td>
-                </tr>
-                <tr className="border-t border-slate-700">
-                  <td className="px-2 py-1.5 text-slate-200 font-medium">Benefit</td>
-                  <td className="px-2 py-1.5 text-slate-400">PTR +3% when receiving. Receiving helps.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

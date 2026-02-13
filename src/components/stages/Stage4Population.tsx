@@ -20,7 +20,7 @@ export function Stage4Population() {
 
   return (
     <div className="h-full flex flex-col items-center justify-center gap-6 px-4 overflow-auto">
-      <h2 className="text-2xl font-bold text-white">Stage 4: Population Dynamics</h2>
+      <h2 className="text-2xl font-bold text-white">Population Dynamics</h2>
       <p className="text-slate-400 text-center max-w-xl">
         The full 50×50 grid. Choose a starting distribution and hit Reset Board. Watch how the mix evolves over time.
       </p>

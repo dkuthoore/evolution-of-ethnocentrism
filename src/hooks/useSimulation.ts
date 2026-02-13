@@ -23,6 +23,16 @@ export interface HistoryEntry {
   traitor: number;
 }
 
+/** API passed to onEngineReady so parents can seed after the engine exists */
+export interface SimulationEngineApi {
+  seedByDistribution: (dist: Distribution) => void;
+  seedTwoGroups: (groupA: Phenotype, groupB: Phenotype, ratioA: number) => void;
+  reset: () => void;
+  setCell: (idx: number, agent: Agent | null) => void;
+  clearRegion: (centerIdx: number, radius: number) => void;
+  setParams: (params: SimulationParams) => void;
+}
+
 export interface UseSimulationOpts {
   scenario?: ScenarioMode;
   viewMode?: ViewMode;
@@ -36,6 +46,8 @@ export interface UseSimulationOpts {
   enableHistory?: boolean;
   params?: SimulationParams;
   initialSpeedIndex?: number;
+  /** Called once when the engine is created; use to seed so gen/pop update and to avoid flicker */
+  onEngineReady?: (api: SimulationEngineApi) => void;
 }
 
 export interface UseSimulationReturn {
@@ -75,12 +87,17 @@ export function useSimulation(
     enableHistory = true,
     params,
     initialSpeedIndex = 0,
+    onEngineReady,
   } = opts;
+
+  const onEngineReadyRef = useRef(onEngineReady);
+  onEngineReadyRef.current = onEngineReady;
 
   const engineRef = useRef<SimulationEngine | null>(null);
   const particlesRef = useRef<ParticleSystem | null>(null);
   const historyRef = useRef<HistoryEntry[]>([]);
   const tickCountRef = useRef(0);
+  const apiRef = useRef<SimulationEngineApi | null>(null);
 
   const [isRunning, setIsRunning] = useState(false);
   const [speedIndex, setSpeedIndex] = useState(initialSpeedIndex);
@@ -156,6 +173,7 @@ export function useSimulation(
     historyRef.current = [];
     setHistory([]);
     tickCountRef.current = 0;
+    if (apiRef.current) onEngineReadyRef.current?.(apiRef.current);
   }, [scenario, gridW, gridH, enableParticles, colorMode, idxToPixel, cellW, cellH]); // eslint-disable-line react-hooks/exhaustive-deps -- params: use setParams for runtime updates
 
   const draw = useCallback(() => {
@@ -341,6 +359,15 @@ export function useSimulation(
     setGeneration(engineRef.current?.getGeneration() ?? 0);
     draw();
   }, [draw]);
+
+  apiRef.current = {
+    seedByDistribution,
+    seedTwoGroups,
+    reset,
+    setCell,
+    clearRegion,
+    setParams,
+  };
 
   return {
     isRunning,
