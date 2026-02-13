@@ -203,26 +203,30 @@ export class SimulationEngine {
     }
   }
 
-  seedByDistribution(distribution: Distribution): void {
+  seedByDistribution(distribution: Distribution, fillRatio: number = 1): void {
     this.reset();
     const phenotypes: Phenotype[] = ['ethnocentric', 'altruist', 'egoist', 'traitor'];
     const size = this.size;
+    const fill = Math.max(0, Math.min(1, fillRatio));
+    const totalPlaced = Math.round(size * fill);
     const agentList: Phenotype[] = [];
     for (const p of phenotypes) {
-      const count = Math.round(distribution[p] * size);
+      const count = Math.round(distribution[p] * totalPlaced);
       for (let i = 0; i < count; i++) agentList.push(p);
     }
-    while (agentList.length < size) {
+    while (agentList.length < totalPlaced) {
       agentList.push(phenotypes[agentList.length % 4]!);
     }
-    const shuffled = agentList.slice(0, size);
+    const shuffled = agentList.slice(0, totalPlaced);
     shuffleArray(shuffled);
-    for (let i = 0; i < size; i++) {
+    const indices = Array.from({ length: size }, (_, i) => i);
+    shuffleArray(indices);
+    for (let i = 0; i < totalPlaced; i++) {
       const phenotype = shuffled[i]!;
       const tag = Math.floor(Math.random() * 4);
       const agent = createAgentWithPhenotype(phenotype, tag);
       agent.ptr = this.params.basePtr;
-      this.grid[i] = this.scenario === SCENARIO_CLASH ? applyClashMapping(agent) : agent;
+      this.grid[indices[i]!] = this.scenario === SCENARIO_CLASH ? applyClashMapping(agent) : agent;
     }
   }
 

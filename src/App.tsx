@@ -59,7 +59,7 @@ function App() {
           />
         )}
         <main
-          className={`min-h-0 flex-1 overflow-auto ${useSymmetricLayout ? 'ml-88 mr-88' : ''}`}
+          className={`flex min-h-0 flex-1 flex-col overflow-hidden ${useSymmetricLayout ? 'ml-88 mr-88' : ''}`}
         >
           {currentStage === 1 && (
             <Stage1Basics onScenarioClick={revealStage1Cell} />

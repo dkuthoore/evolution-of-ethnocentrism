@@ -10,10 +10,8 @@ import { PopulationChart } from './PopulationChart';
 import { SPEEDS } from '../lib/constants';
 import type { ScenarioMode, SimulationParams } from '../lib/constants';
 import type { Phenotype } from '../lib/constants';
-import type { HistoryEntry } from '../hooks/useSimulation';
-
 export interface SimulationWidgetApi {
-  seedByDistribution: (dist: import('../lib/constants').Distribution) => void;
+  seedByDistribution: (dist: import('../lib/constants').Distribution, fillRatio?: number) => void;
   seedTwoGroups: (a: Phenotype, b: Phenotype, ratio: number, fillRatio?: number) => void;
   reset: () => void;
   setCell: (idx: number, agent: import('../lib/engine').Agent | null) => void;
@@ -166,9 +164,8 @@ export function SimulationWidget({
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 flex-wrap">
-      <div className="flex flex-col gap-2">
-        {extraControls}
+    <div className="flex min-h-0 flex-1 flex-col lg:flex-row gap-4 flex-nowrap">
+      <div className="flex flex-shrink-0 flex-col gap-2" style={{ maxWidth: canvasSize }}>
         {allowPainting && (
           <div className="flex gap-2 items-center flex-wrap">
             <button onClick={() => setActiveTool('none')} className={`p-2 rounded ${activeTool === 'none' ? 'bg-slate-600' : 'bg-slate-700'}`}>—</button>
@@ -184,7 +181,7 @@ export function SimulationWidget({
             )}
           </div>
         )}
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-nowrap items-center">
           <button
             onClick={sim.isRunning ? sim.pause : sim.play}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium ${
@@ -205,6 +202,7 @@ export function SimulationWidget({
             <RotateCcw size={18} />
             Reset
           </button>
+          {extraControls}
         </div>
         <div className="relative bg-slate-800 rounded-lg overflow-hidden border border-slate-700 inline-block">
           <canvas
@@ -237,7 +235,7 @@ export function SimulationWidget({
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 min-w-[200px]">
+      <div className={`flex flex-col gap-4 min-w-[200px] ${showChart ? 'min-h-0 flex-1' : ''}`}>
         {showSpeed && (
           <div>
             <h4 className="text-sm font-semibold text-slate-300 mb-1">Speed</h4>
@@ -298,10 +296,12 @@ export function SimulationWidget({
             </div>
           </div>
         )}
-        {showChart && sim.history.length > 0 && (
-          <div className="w-full max-w-sm">
-            <h4 className="text-sm font-semibold text-slate-300 mb-1">Population Over Time</h4>
-            <PopulationChart history={sim.history} height={160} />
+        {showChart && !sim.isRunning && sim.history.length > 1 && (
+          <div className="flex min-h-0 flex-1 flex-col w-full max-w-sm">
+            <h4 className="flex-shrink-0 text-sm font-semibold text-slate-300 mb-1">Population Over Time</h4>
+            <div className="min-h-0 flex-1 h-full">
+              <PopulationChart history={sim.history} height={'100%'} />
+            </div>
           </div>
         )}
       </div>

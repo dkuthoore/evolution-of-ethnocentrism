@@ -29,7 +29,7 @@ export function Stage6GodMode() {
         speedIndex={5}
         showChart={true}
         enableHistory={true}
-        enableParticles={true}
+        enableParticles={false}
         params={params}
         allowPainting={true}
         simApiRef={simApiRef}

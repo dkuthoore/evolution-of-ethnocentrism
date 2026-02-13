@@ -192,9 +192,6 @@ export function Stage1Basics({ onCooperate, onScenarioClick }: Stage1BasicsProps
               <li>If both defect, nothing happens for either party.</li>
             </ul>
             <p className="text-slate-400 text-center text-sm">
-              Defection is always the individually rational choice in a single interaction (you either free-ride or avoid being exploited), but mutual cooperation beats mutual defection.
-            </p>
-            <p className="text-slate-400 text-center text-sm">
               Click the 3 different options below to see the costs and payoffs.
             </p>
           </div>

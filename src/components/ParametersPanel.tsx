@@ -6,12 +6,18 @@ export type Stage1MatrixCell = 'cc' | 'cd' | 'dc' | 'dd';
 
 const NET_CC = BENEFIT - COST; // +0.02 when both cooperate
 
+const STAGE1_DEFECTION_LINE =
+  'Defection is always the individually rational choice in a single interaction (you either free-ride or avoid being exploited), but mutual cooperation beats mutual defection.';
+
 function PayoffMatrix({ revealedCells }: { revealedCells?: Set<Stage1MatrixCell> }) {
   const net = NET_CC.toFixed(2);
   const cost = COST.toFixed(2);
   const benefit = BENEFIT.toFixed(2);
   const empty = <span className="text-slate-500">—</span>;
   const show = (cell: Stage1MatrixCell) => revealedCells?.has(cell) ?? false;
+  const allFourRevealed =
+    revealedCells?.size === 4 &&
+    ['cc', 'cd', 'dc', 'dd'].every((c) => revealedCells.has(c as Stage1MatrixCell));
   return (
     <div className="absolute right-24 top-1/2 -translate-y-1/2 w-64 z-10">
       <h3 className="text-sm font-semibold text-white mb-2 text-center">Payoff matrix (PTR change)</h3>
@@ -56,6 +62,9 @@ function PayoffMatrix({ revealedCells }: { revealedCells?: Set<Stage1MatrixCell>
           </tbody>
         </table>
       </div>
+      {allFourRevealed && (
+        <p className="text-slate-400 text-xs text-center mt-3">{STAGE1_DEFECTION_LINE}</p>
+      )}
     </div>
   );
 }
@@ -65,6 +74,15 @@ const STAGE2_PARAMETERS = [
   { param: 'Benefit', description: 'PTR +3% when receiving. Receiving helps.' },
   { param: 'BasePTR', description: 'PTR reset to 12% at start of each tick.' },
   { param: 'DeathRate', description: '10% chance per agent per tick to die. Creates space.' },
+];
+
+const STAGE4_PARAMETERS = [
+  { param: 'Cost', description: 'PTR −1% when donating. Giving is costly.' },
+  { param: 'Benefit', description: 'PTR +3% when receiving. Receiving helps.' },
+  { param: 'BasePTR', description: 'PTR reset to 12% at start of each tick.' },
+  { param: 'Death rate', description: '10% chance per agent per tick to die. Creates space.' },
+  { param: 'Mutation rate', description: 'Chance an offspring is a different strategy (e.g. 0.5% per birth).' },
+  { param: 'Immigration rate', description: 'Max new Pips per tick in empty cells (e.g. 1).' },
 ];
 
 function ParametersTable({
@@ -159,6 +177,9 @@ export function ParametersPanel({
   }
   if (stage === 3 && stage3CaseId !== undefined && onStage3CaseChange) {
     return <Stage3CasePanel selectedCaseId={stage3CaseId} onCaseChange={onStage3CaseChange} />;
+  }
+  if (stage === 4) {
+    return <ParametersTable parameters={STAGE4_PARAMETERS} />;
   }
   return null;
 }

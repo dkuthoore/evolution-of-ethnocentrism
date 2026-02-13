@@ -38,7 +38,7 @@ export function Stage5Evolution() {
         speedIndex={4}
         showChart={true}
         enableHistory={true}
-        enableParticles={true}
+        enableParticles={false}
       />
     </div>
   );

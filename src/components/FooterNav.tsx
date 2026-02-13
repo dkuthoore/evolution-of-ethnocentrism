@@ -12,7 +12,7 @@ export function FooterNav({ stage, setStage, total }: FooterNavProps) {
       <div className="flex items-center justify-between gap-4 max-w-2xl mx-auto">
         <button
           onClick={() => setStage(stage - 1)}
-          disabled={stage <= 1}
+          disabled={stage <= 0}
           className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-slate-700 hover:bg-slate-600 text-white disabled:hover:bg-slate-700"
           aria-label="Previous stage"
         >

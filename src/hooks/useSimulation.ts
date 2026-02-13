@@ -15,6 +15,17 @@ const STATS_UPDATE_INTERVAL_MS = 80; // ~12.5 updates/sec max
 const HISTORY_SAMPLE_INTERVAL = 15; // Sample every N ticks
 const HISTORY_MAX_LENGTH = 500;
 
+/** Downsample array to at most maxLen points, keeping first, last, and evenly spaced in between. */
+function downsampleHistory(entries: HistoryEntry[], maxLen: number): HistoryEntry[] {
+  if (entries.length <= maxLen) return entries;
+  const result: HistoryEntry[] = [];
+  for (let i = 0; i < maxLen; i++) {
+    const idx = i === maxLen - 1 ? entries.length - 1 : Math.round((i / (maxLen - 1)) * (entries.length - 1));
+    result.push(entries[idx]!);
+  }
+  return result;
+}
+
 export interface HistoryEntry {
   generation: number;
   ethnocentric: number;
@@ -25,7 +36,7 @@ export interface HistoryEntry {
 
 /** API passed to onEngineReady so parents can seed after the engine exists */
 export interface SimulationEngineApi {
-  seedByDistribution: (dist: Distribution) => void;
+  seedByDistribution: (dist: Distribution, fillRatio?: number) => void;
   seedTwoGroups: (groupA: Phenotype, groupB: Phenotype, ratioA: number, fillRatio?: number) => void;
   reset: () => void;
   setCell: (idx: number, agent: Agent | null) => void;
@@ -66,7 +77,7 @@ export interface UseSimulationReturn {
   history: HistoryEntry[];
   setCell: (idx: number, agent: Agent | null) => void;
   clearRegion: (centerIdx: number, radius: number) => void;
-  seedByDistribution: (dist: Distribution) => void;
+  seedByDistribution: (dist: Distribution, fillRatio?: number) => void;
   seedTwoGroups: (groupA: Phenotype, groupB: Phenotype, ratioA: number, fillRatio?: number) => void;
   setParams: (params: SimulationParams) => void;
 }
@@ -250,10 +261,10 @@ export function useSimulation(
         egoist: s.counts.egoist,
         traitor: s.counts.traitor,
       };
-      historyRef.current = [
-        ...historyRef.current.slice(-(HISTORY_MAX_LENGTH - 1)),
-        entry,
-      ];
+      historyRef.current = downsampleHistory(
+        [...historyRef.current, entry],
+        HISTORY_MAX_LENGTH
+      );
       setHistory(historyRef.current);
     }
   }, [enableHistory]);
@@ -337,17 +348,31 @@ export function useSimulation(
     draw();
   }, [draw]);
 
-  const seedByDistribution = useCallback((dist: Distribution) => {
-    engineRef.current?.seedByDistribution(dist);
+  const seedByDistribution = useCallback((dist: Distribution, fillRatio?: number) => {
+    engineRef.current?.seedByDistribution(dist, fillRatio);
     particlesRef.current?.clear();
     historyRef.current = [];
-    setHistory([]);
     tickCountRef.current = 0;
     const s = engineRef.current?.getStats();
     if (s) setStats({ ...s, counts: { ...s.counts } });
     setGeneration(engineRef.current?.getGeneration() ?? 0);
+    if (enableHistory && engineRef.current) {
+      const gen = engineRef.current.getGeneration();
+      const stats = engineRef.current.getStats();
+      const initial: HistoryEntry = {
+        generation: gen,
+        ethnocentric: stats.counts.ethnocentric,
+        altruist: stats.counts.altruist,
+        egoist: stats.counts.egoist,
+        traitor: stats.counts.traitor,
+      };
+      historyRef.current = [initial];
+      setHistory([initial]);
+    } else {
+      setHistory([]);
+    }
     draw();
-  }, [draw]);
+  }, [draw, enableHistory]);
 
   const setParams = useCallback((params: SimulationParams) => {
     engineRef.current?.setParams(params);
@@ -357,13 +382,27 @@ export function useSimulation(
     engineRef.current?.seedTwoGroups(groupA, groupB, ratioA, fillRatio);
     particlesRef.current?.clear();
     historyRef.current = [];
-    setHistory([]);
     tickCountRef.current = 0;
     const s = engineRef.current?.getStats();
     if (s) setStats({ ...s, counts: { ...s.counts } });
     setGeneration(engineRef.current?.getGeneration() ?? 0);
+    if (enableHistory && engineRef.current) {
+      const gen = engineRef.current.getGeneration();
+      const stats = engineRef.current.getStats();
+      const initial: HistoryEntry = {
+        generation: gen,
+        ethnocentric: stats.counts.ethnocentric,
+        altruist: stats.counts.altruist,
+        egoist: stats.counts.egoist,
+        traitor: stats.counts.traitor,
+      };
+      historyRef.current = [initial];
+      setHistory([initial]);
+    } else {
+      setHistory([]);
+    }
     draw();
-  }, [draw]);
+  }, [draw, enableHistory]);
 
   apiRef.current = {
     seedByDistribution,

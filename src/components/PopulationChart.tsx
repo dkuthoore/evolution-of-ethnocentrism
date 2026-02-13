@@ -6,19 +6,26 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from 'recharts';
 import type { HistoryEntry } from '../hooks/useSimulation';
-import { PHENOTYPE_COLORS } from '../lib/pipRenderer';
+import { STRATEGY_COLORS } from '../lib/constants';
 
 interface PopulationChartProps {
   history: HistoryEntry[];
-  height?: number;
+  /** Pixel height or '100%' to fill the parent (parent must have a defined height) */
+  height?: number | '100%';
 }
 
 export function PopulationChart({ history, height = 200 }: PopulationChartProps) {
+  const maxGen = history.length > 0 ? history[history.length - 1]!.generation : 0;
+  const xDomain: [number, number] = [0, maxGen];
+  const useFullHeight = height === '100%';
+
   return (
-    <div className="w-full" style={{ height }}>
+    <div
+      className={`w-full ${useFullHeight ? 'h-full' : ''}`}
+      style={useFullHeight ? undefined : { height }}
+    >
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           data={history}
@@ -27,6 +34,9 @@ export function PopulationChart({ history, height = 200 }: PopulationChartProps)
           <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
           <XAxis
             dataKey="generation"
+            type="number"
+            domain={xDomain}
+            allowDataOverflow
             stroke="#94a3b8"
             fontSize={11}
             tickFormatter={(v) => `Gen ${v}`}
@@ -41,27 +51,21 @@ export function PopulationChart({ history, height = 200 }: PopulationChartProps)
             labelFormatter={(v) => `Generation ${v}`}
             formatter={(value: number, name: string) => [value, name]} 
           />
-          <Legend
-            wrapperStyle={{ fontSize: 11 }}
-            formatter={(value) => (
-              <span className="text-slate-300 capitalize">{value}</span>
-            )}
-          />
           <Area
             type="monotone"
             dataKey="ethnocentric"
             stackId="1"
-            stroke={PHENOTYPE_COLORS.ethnocentric}
-            fill={PHENOTYPE_COLORS.ethnocentric}
+            stroke={STRATEGY_COLORS.ethnocentric}
+            fill={STRATEGY_COLORS.ethnocentric}
             fillOpacity={0.7}
-            name="Ethnocentric"
+            name="Ethnocentrist"
           />
           <Area
             type="monotone"
             dataKey="altruist"
             stackId="1"
-            stroke={PHENOTYPE_COLORS.altruist}
-            fill={PHENOTYPE_COLORS.altruist}
+            stroke={STRATEGY_COLORS.altruist}
+            fill={STRATEGY_COLORS.altruist}
             fillOpacity={0.7}
             name="Altruist"
           />
@@ -69,8 +73,8 @@ export function PopulationChart({ history, height = 200 }: PopulationChartProps)
             type="monotone"
             dataKey="egoist"
             stackId="1"
-            stroke={PHENOTYPE_COLORS.egoist}
-            fill={PHENOTYPE_COLORS.egoist}
+            stroke={STRATEGY_COLORS.egoist}
+            fill={STRATEGY_COLORS.egoist}
             fillOpacity={0.7}
             name="Egoist"
           />
@@ -78,8 +82,8 @@ export function PopulationChart({ history, height = 200 }: PopulationChartProps)
             type="monotone"
             dataKey="traitor"
             stackId="1"
-            stroke={PHENOTYPE_COLORS.traitor}
-            fill={PHENOTYPE_COLORS.traitor}
+            stroke={STRATEGY_COLORS.traitor}
+            fill={STRATEGY_COLORS.traitor}
             fillOpacity={0.7}
             name="Traitor"
           />

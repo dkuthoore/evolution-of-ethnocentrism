@@ -70,10 +70,7 @@ export const DISTRIBUTION_PRESETS: Record<string, Distribution> = {
   'Heavy Ethnocentric': { ethnocentric: 0.8, altruist: 0.1, egoist: 0.1, traitor: 0 },
   'Heavy Egoist': { ethnocentric: 0.05, altruist: 0.05, egoist: 0.9, traitor: 0 },
   'Heavy Traitor': { ethnocentric: 0.05, altruist: 0.05, egoist: 0, traitor: 0.9 },
-  'Ethno vs Egoist': { ethnocentric: 0.5, altruist: 0, egoist: 0.5, traitor: 0 },
-  'Altruist vs Egoist': { ethnocentric: 0, altruist: 0.5, egoist: 0.5, traitor: 0 },
   'Low Ethno, High Altruist': { ethnocentric: 0.1, altruist: 0.7, egoist: 0.1, traitor: 0.1 },
-  'Ethno vs Altruist': { ethnocentric: 0.5, altruist: 0.5, egoist: 0, traitor: 0 },
 };
 
 // God Mode default parameters

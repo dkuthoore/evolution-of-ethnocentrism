@@ -4,36 +4,43 @@ type HomePageProps = {
 
 export function HomePage({ onExplore }: HomePageProps) {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-8 px-6 text-center">
-      <h1 className="text-3xl font-bold text-white">The Evolution of Ethnocentrism</h1>
-      <p className="max-w-xl text-lg text-slate-300">
-        An interactive, educational web simulation inspired by Nicky Case's{' '}
-        <a
-          href="https://ncase.me/trust/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sky-400 underline hover:text-sky-300"
+    <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col items-center justify-center gap-8 px-6 text-center">
+        <h1 className="text-3xl font-bold text-white">The Evolution of Ethnocentrism</h1>
+        <p className="max-w-xl text-lg text-slate-300">
+          An interactive, educational web simulation exploring the Hammond & Axelrod (2006) paper{' '}
+          <a
+            href="https://artisresearch.com/files/articles/axelrod_evolution_of_ethnocentrism.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sky-400 underline hover:text-sky-300"
+          >
+            <em>"The Evolution of Ethnocentrism"</em>
+          </a>{' '}
+          and its implications.
+          <br />
+          (inspired by{' '}
+          <a
+            href="https://ncase.me/trust/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sky-400 underline hover:text-sky-300"
+          >
+            Nicky Case's The Evolution of Trust
+          </a>
+          )
+        </p>
+        <button
+          type="button"
+          onClick={onExplore}
+          className="rounded-lg bg-sky-600 px-8 py-3 text-lg font-semibold text-white shadow-lg transition hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900"
         >
-          The Evolution of Trust
-        </a>
-        , translating the Hammond & Axelrod (2006) paper{' '}
-        <a
-          href="https://artisresearch.com/files/articles/axelrod_evolution_of_ethnocentrism.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sky-400 underline hover:text-sky-300"
-        >
-          <em>"The Evolution of Ethnocentrism"</em>
-        </a>{' '}
-        into an explorable explanation.
-      </p>
-      <button
-        type="button"
-        onClick={onExplore}
-        className="rounded-lg bg-sky-600 px-8 py-3 text-lg font-semibold text-white shadow-lg transition hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900"
-      >
-        Get Started!
-      </button>
+          Get Started!
+        </button>
+      </div>
+      <footer className="py-4 text-center text-sm text-slate-500">
+        By: Damian Kuthoore, 2026
+      </footer>
     </div>
   );
 }
