@@ -26,7 +26,7 @@ export interface HistoryEntry {
 /** API passed to onEngineReady so parents can seed after the engine exists */
 export interface SimulationEngineApi {
   seedByDistribution: (dist: Distribution) => void;
-  seedTwoGroups: (groupA: Phenotype, groupB: Phenotype, ratioA: number) => void;
+  seedTwoGroups: (groupA: Phenotype, groupB: Phenotype, ratioA: number, fillRatio?: number) => void;
   reset: () => void;
   setCell: (idx: number, agent: Agent | null) => void;
   clearRegion: (centerIdx: number, radius: number) => void;
@@ -43,6 +43,8 @@ export interface UseSimulationOpts {
   gridH?: number;
   usePips?: boolean;
   enableParticles?: boolean;
+  /** When false, do not spawn cost/benefit (cooperation line/numbers) particles. Used only on Stage 1; other stages leave this false. */
+  enableCooperationParticles?: boolean;
   enableHistory?: boolean;
   params?: SimulationParams;
   initialSpeedIndex?: number;
@@ -65,7 +67,7 @@ export interface UseSimulationReturn {
   setCell: (idx: number, agent: Agent | null) => void;
   clearRegion: (centerIdx: number, radius: number) => void;
   seedByDistribution: (dist: Distribution) => void;
-  seedTwoGroups: (groupA: Phenotype, groupB: Phenotype, ratioA: number) => void;
+  seedTwoGroups: (groupA: Phenotype, groupB: Phenotype, ratioA: number, fillRatio?: number) => void;
   setParams: (params: SimulationParams) => void;
 }
 
@@ -84,6 +86,7 @@ export function useSimulation(
     gridH = GRID_SIZES.sandbox[1],
     usePips = true,
     enableParticles = true,
+    enableCooperationParticles = false,
     enableHistory = true,
     params,
     initialSpeedIndex = 0,
@@ -133,16 +136,18 @@ export function useSimulation(
     particlesRef.current = new ParticleSystem();
     const events = enableParticles
       ? {
-          cooperation: (giverIdx: number, receiverIdx: number) => {
-            const g = idxToPixel(giverIdx);
-            const r = idxToPixel(receiverIdx);
-            const grid = engineRef.current?.getGrid();
-            const agent = grid?.[giverIdx];
-            const color = agent
-              ? (colorMode === 'strategy' ? STRATEGY_COLORS[getPhenotype(agent)] : TAG_COLORS[agent.tag])
-              : '#888';
-            particlesRef.current?.spawnCooperation(g.x, g.y, r.x, r.y, cellW, cellH, color);
-          },
+          ...(enableCooperationParticles && {
+            cooperation: (giverIdx: number, receiverIdx: number) => {
+              const g = idxToPixel(giverIdx);
+              const r = idxToPixel(receiverIdx);
+              const grid = engineRef.current?.getGrid();
+              const agent = grid?.[giverIdx];
+              const color = agent
+                ? (colorMode === 'strategy' ? STRATEGY_COLORS[getPhenotype(agent)] : TAG_COLORS[agent.tag])
+                : '#888';
+              particlesRef.current?.spawnCooperation(g.x, g.y, r.x, r.y, cellW, cellH, color);
+            },
+          }),
           reproduction: (_parentIdx: number, childIdx: number) => {
             const c = idxToPixel(childIdx);
             const grid = engineRef.current?.getGrid();
@@ -174,7 +179,7 @@ export function useSimulation(
     setHistory([]);
     tickCountRef.current = 0;
     if (apiRef.current) onEngineReadyRef.current?.(apiRef.current);
-  }, [scenario, gridW, gridH, enableParticles, colorMode, idxToPixel, cellW, cellH]); // eslint-disable-line react-hooks/exhaustive-deps -- params: use setParams for runtime updates
+  }, [scenario, gridW, gridH, enableParticles, enableCooperationParticles, colorMode, idxToPixel, cellW, cellH]); // eslint-disable-line react-hooks/exhaustive-deps -- params: use setParams for runtime updates
 
   const draw = useCallback(() => {
     const canvas = canvasRef?.current;
@@ -348,8 +353,8 @@ export function useSimulation(
     engineRef.current?.setParams(params);
   }, []);
 
-  const seedTwoGroups = useCallback((groupA: Phenotype, groupB: Phenotype, ratioA: number) => {
-    engineRef.current?.seedTwoGroups(groupA, groupB, ratioA);
+  const seedTwoGroups = useCallback((groupA: Phenotype, groupB: Phenotype, ratioA: number, fillRatio?: number) => {
+    engineRef.current?.seedTwoGroups(groupA, groupB, ratioA, fillRatio);
     particlesRef.current?.clear();
     historyRef.current = [];
     setHistory([]);

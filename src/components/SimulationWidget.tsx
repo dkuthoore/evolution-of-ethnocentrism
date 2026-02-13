@@ -14,7 +14,7 @@ import type { HistoryEntry } from '../hooks/useSimulation';
 
 export interface SimulationWidgetApi {
   seedByDistribution: (dist: import('../lib/constants').Distribution) => void;
-  seedTwoGroups: (a: Phenotype, b: Phenotype, ratio: number) => void;
+  seedTwoGroups: (a: Phenotype, b: Phenotype, ratio: number, fillRatio?: number) => void;
   reset: () => void;
   setCell: (idx: number, agent: import('../lib/engine').Agent | null) => void;
   clearRegion: (centerIdx: number, radius: number) => void;
@@ -45,6 +45,8 @@ export interface SimulationWidgetProps {
   extraControls?: ReactNode;
   /** 'greenRed': Play=green, Pause=red (for stage coherence with Stage 2) */
   playPauseVariant?: 'default' | 'greenRed';
+  /** When 'index1To5', speed slider shows 1–5 (maps to speedIndex 0–4). Default 'tps'. */
+  speedSliderVariant?: 'tps' | 'index1To5';
 }
 
 type GodTool = 'none' | 'brush' | 'meteor' | 'inspect';
@@ -68,6 +70,7 @@ export function SimulationWidget({
   allowPainting = false,
   extraControls,
   playPauseVariant = 'default',
+  speedSliderVariant = 'tps',
 }: SimulationWidgetProps) {
   const [activeTool, setActiveTool] = useState<GodTool>('none');
   const [brushPhenotype, setBrushPhenotype] = useState<Phenotype>('ethnocentric');
@@ -238,15 +241,31 @@ export function SimulationWidget({
         {showSpeed && (
           <div>
             <h4 className="text-sm font-semibold text-slate-300 mb-1">Speed</h4>
-            <input
-              type="range"
-              min={0}
-              max={SPEEDS.length - 1}
-              value={sim.speedIndex}
-              onChange={(e) => sim.setSpeedIndex(Number(e.target.value))}
-              className="w-full accent-blue-500"
-            />
-            <p className="text-xs text-slate-500">{SPEEDS[sim.speedIndex]} TPS</p>
+            {speedSliderVariant === 'index1To5' ? (
+              <>
+                <input
+                  type="range"
+                  min={1}
+                  max={5}
+                  value={Math.min(5, Math.max(1, sim.speedIndex + 1))}
+                  onChange={(e) => sim.setSpeedIndex(Math.max(0, Number(e.target.value) - 1))}
+                  className="w-full accent-blue-500"
+                />
+                <p className="text-xs text-slate-500">{Math.min(5, Math.max(1, sim.speedIndex + 1))}</p>
+              </>
+            ) : (
+              <>
+                <input
+                  type="range"
+                  min={0}
+                  max={SPEEDS.length - 1}
+                  value={sim.speedIndex}
+                  onChange={(e) => sim.setSpeedIndex(Number(e.target.value))}
+                  className="w-full accent-blue-500"
+                />
+                <p className="text-xs text-slate-500">{SPEEDS[sim.speedIndex]} TPS</p>
+              </>
+            )}
           </div>
         )}
         <div className="text-sm text-slate-400">
@@ -259,7 +278,7 @@ export function SimulationWidget({
               {(['ethnocentric', 'altruist', 'egoist', 'traitor'] as const).map((key) => (
                 <div key={key}>
                   <div className="flex justify-between text-xs">
-                    <span className="capitalize">{key}</span>
+                    <span>{key === 'ethnocentric' ? 'Ethnocentrist' : key === 'altruist' ? 'Altruist' : key === 'egoist' ? 'Egoist' : 'Traitor'}</span>
                     <span>{pct(key)}%</span>
                   </div>
                   <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">

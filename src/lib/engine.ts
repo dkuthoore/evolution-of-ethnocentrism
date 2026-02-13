@@ -226,17 +226,19 @@ export class SimulationEngine {
     }
   }
 
-  seedTwoGroups(groupA: Phenotype, groupB: Phenotype, ratioA: number): void {
+  seedTwoGroups(groupA: Phenotype, groupB: Phenotype, ratioA: number, fillRatio: number = 1): void {
     this.reset();
     const indices = Array.from({ length: this.size }, (_, i) => i);
     shuffleArray(indices);
-    const countA = Math.round(this.size * Math.max(0, Math.min(1, ratioA)));
-    for (let i = 0; i < this.size; i++) {
+    const fill = Math.max(0, Math.min(1, fillRatio));
+    const totalPlaced = Math.round(this.size * fill);
+    const countA = Math.round(totalPlaced * Math.max(0, Math.min(1, ratioA)));
+    for (let i = 0; i < totalPlaced; i++) {
       const phenotype = i < countA ? groupA : groupB;
       const tag = i < countA ? 0 : 1;
       const agent = createAgentWithPhenotype(phenotype, tag);
       agent.ptr = this.params.basePtr;
-      this.grid[indices[i]!] = this.scenario === SCENARIO_CLASH ? applyClashMapping(agent) : agent;
+      this.grid[indices[i]!] = agent;
     }
   }
 
@@ -306,15 +308,13 @@ export class SimulationEngine {
       const emptyNeighbors = neighborIndices.filter((ni) => this.grid[ni] === null);
       if (emptyNeighbors.length === 0) continue;
       const targetIdx = emptyNeighbors[Math.floor(Math.random() * emptyNeighbors.length)];
-      let offspring: Agent = {
-        tag: this.mutateTrait(agent.tag, 3),
+      const offspring: Agent = {
+        tag: this.mutateTrait(agent.tag, 1),
         ig: this.mutateTrait(agent.ig, 1),
         og: this.mutateTrait(agent.og, 1),
         ptr: basePtr,
       };
-      if (this.scenario === SCENARIO_CLASH) {
-        offspring = applyClashMapping(offspring);
-      }
+      // In clash scenario, preserve phenotype (ig, og); tag stays 0 or 1 for group identity only.
       this.grid[targetIdx] = offspring;
       this.events.reproduction?.(idx, targetIdx);
     }

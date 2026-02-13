@@ -15,13 +15,15 @@ import {
 
 const TOTAL_STAGES = 6;
 
-/** Symmetric side panels: main margin 18rem each side so legend/params sit closer to content (Tailwind ml-72/mr-72) */
+/** Symmetric side panels: panels at left-24/right-24 (6rem), width 16rem; main margin 22rem (ml-88/mr-88) so content starts where panels end. */
 
 import type { Stage1MatrixCell } from './components/ParametersPanel';
+import type { ClashCaseId } from './components/stages/Stage3Clash';
 
 function App() {
   const [currentStage, setCurrentStage] = useState(0);
   const [stage1RevealedCells, setStage1RevealedCells] = useState<Set<Stage1MatrixCell>>(new Set());
+  const [stage3CaseId, setStage3CaseId] = useState<ClashCaseId>('altruist-vs-egoist');
 
   useEffect(() => {
     if (currentStage !== 1) setStage1RevealedCells(new Set());
@@ -52,16 +54,23 @@ function App() {
           <ParametersPanel
             stage={currentStage}
             stage1RevealedCells={currentStage === 1 ? stage1RevealedCells : undefined}
+            stage3CaseId={currentStage === 3 ? stage3CaseId : undefined}
+            onStage3CaseChange={currentStage === 3 ? setStage3CaseId : undefined}
           />
         )}
         <main
-          className={`min-h-0 flex-1 overflow-auto ${useSymmetricLayout ? 'ml-72 mr-72' : ''}`}
+          className={`min-h-0 flex-1 overflow-auto ${useSymmetricLayout ? 'ml-88 mr-88' : ''}`}
         >
           {currentStage === 1 && (
             <Stage1Basics onScenarioClick={revealStage1Cell} />
           )}
           {currentStage === 2 && <Stage2Homogeneous />}
-          {currentStage === 3 && <Stage3Clash />}
+          {currentStage === 3 && (
+            <Stage3Clash
+              selectedCaseId={stage3CaseId}
+              onCaseChange={setStage3CaseId}
+            />
+          )}
           {currentStage === 4 && <Stage4Population />}
           {currentStage === 5 && <Stage5Evolution />}
           {currentStage === 6 && <Stage6GodMode />}

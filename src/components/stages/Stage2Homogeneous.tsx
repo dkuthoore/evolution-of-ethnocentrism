@@ -102,7 +102,7 @@ function MiniGrid({ phenotype, index, controlsRef, speedIndex }: MiniGridProps) 
 export function Stage2Homogeneous() {
   const controlsRef = useRef<(Stage2GridControl | null)[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [speedSlider, setSpeedSlider] = useState(4); // 1–5; actual speedIndex = speedSlider - 1
+  const [speedSlider, setSpeedSlider] = useState(5); // 1–5; actual speedIndex = speedSlider - 1
 
   const playAll = () => {
     controlsRef.current.forEach((c) => c?.play());
