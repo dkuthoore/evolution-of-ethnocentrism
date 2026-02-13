@@ -7,7 +7,7 @@ import { getGridIndexFromMouse } from '../lib/canvasUtils';
 import { Pencil, Flame, Search } from 'lucide-react';
 import { Play, Pause, RotateCcw } from 'lucide-react';
 import { PopulationChart } from './PopulationChart';
-import { SPEEDS } from '../lib/constants';
+import { SPEEDS, TAG_COLORS, TAG_LABELS } from '../lib/constants';
 import type { ScenarioMode, SimulationParams } from '../lib/constants';
 import type { Phenotype } from '../lib/constants';
 export interface SimulationWidgetApi {
@@ -45,6 +45,10 @@ export interface SimulationWidgetProps {
   playPauseVariant?: 'default' | 'greenRed';
   /** When 'index1To5', speed slider shows 1–5 (maps to speedIndex 0–4). Default 'tps'. */
   speedSliderVariant?: 'tps' | 'index1To5';
+  /** When set, draw a ring around agents with this phenotype (e.g. Stage 5: ethnocentrists when color = tag). */
+  highlightPhenotype?: Phenotype;
+  /** When true, demographics show counts by tag (Demographics by Tag) and chart title is "Strategies Over Time". */
+  demographicsByTag?: boolean;
 }
 
 type GodTool = 'none' | 'brush' | 'meteor' | 'inspect';
@@ -69,6 +73,8 @@ export function SimulationWidget({
   extraControls,
   playPauseVariant = 'default',
   speedSliderVariant = 'tps',
+  highlightPhenotype,
+  demographicsByTag = false,
 }: SimulationWidgetProps) {
   const [activeTool, setActiveTool] = useState<GodTool>('none');
   const [brushPhenotype, setBrushPhenotype] = useState<Phenotype>('ethnocentric');
@@ -91,6 +97,7 @@ export function SimulationWidget({
     enableHistory,
     params,
     initialSpeedIndex,
+    highlightPhenotype,
     onEngineReady:
       simApiRef || onReady
         ? (api: SimulationEngineApi) => {
@@ -121,6 +128,7 @@ export function SimulationWidget({
 
   const total = sim.stats.total || 1;
   const pct = (c: Phenotype) => (((sim.stats.counts[c] ?? 0) / total) * 100).toFixed(1);
+  const tagPct = (tagIndex: number) => (((sim.stats.tagCounts?.[tagIndex] ?? 0) / total) * 100).toFixed(1);
 
   const handleCanvasMouseMove = useCallback(
     (e: MouseEvent<HTMLCanvasElement>) => {
@@ -269,7 +277,58 @@ export function SimulationWidget({
         <div className="text-sm text-slate-400">
           Gen {sim.generation} · Pop {sim.stats.total}
         </div>
-        {showDemographics && (
+        {showDemographics && demographicsByTag && (
+          <>
+            <div>
+              <h4 className="text-sm font-semibold text-slate-300 mb-2">Demographics (by Tag)</h4>
+              <div className="space-y-2">
+                {TAG_LABELS.map((label, tagIndex) => (
+                  <div key={tagIndex}>
+                    <div className="flex justify-between text-xs">
+                      <span>{label}</span>
+                      <span>{tagPct(tagIndex)}%</span>
+                    </div>
+                    <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{
+                          width: `${tagPct(tagIndex)}%`,
+                          backgroundColor: TAG_COLORS[tagIndex],
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-slate-300 mb-2">Demographics (by Strategy)</h4>
+              <div className="space-y-2">
+                {(['ethnocentric', 'altruist', 'egoist', 'traitor'] as const).map((key) => (
+                  <div key={key}>
+                    <div className="flex justify-between text-xs">
+                      <span>{key === 'ethnocentric' ? 'Ethnocentrist' : key === 'altruist' ? 'Altruist' : key === 'egoist' ? 'Egoist' : 'Traitor'}</span>
+                      <span>{pct(key)}%</span>
+                    </div>
+                    <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{
+                          width: `${pct(key)}%`,
+                          backgroundColor:
+                            key === 'ethnocentric' ? '#a855f7' :
+                            key === 'altruist' ? '#3b82f6' :
+                            key === 'egoist' ? '#ef4444' : '#eab308',
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+        {showDemographics && !demographicsByTag && (
           <div>
             <h4 className="text-sm font-semibold text-slate-300 mb-2">Demographics</h4>
             <div className="space-y-2">
@@ -296,7 +355,7 @@ export function SimulationWidget({
             </div>
           </div>
         )}
-        {showChart && !sim.isRunning && sim.history.length > 1 && (
+        {showChart && !demographicsByTag && !sim.isRunning && sim.history.length > 1 && (
           <div className="flex min-h-0 flex-1 flex-col w-full max-w-sm">
             <h4 className="flex-shrink-0 text-sm font-semibold text-slate-300 mb-1">Population Over Time</h4>
             <div className="min-h-0 flex-1 h-full">

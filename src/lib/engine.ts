@@ -24,6 +24,8 @@ export interface Agent {
 
 export interface Stats {
   counts: Record<Phenotype, number>;
+  /** Count per tag (0–3). Present when engine has run at least one tick. */
+  tagCounts: [number, number, number, number];
   total: number;
 }
 
@@ -348,15 +350,17 @@ export class SimulationEngine {
       egoist: 0,
       traitor: 0,
     };
+    const tagCounts: [number, number, number, number] = [0, 0, 0, 0];
     let total = 0;
     for (let i = 0; i < this.size; i++) {
       const agent = this.grid[i];
       if (agent) {
         counts[getPhenotype(agent)]++;
+        if (agent.tag >= 0 && agent.tag <= 3) tagCounts[agent.tag]++;
         total++;
       }
     }
-    return { counts, total };
+    return { counts, tagCounts, total };
   }
 
   getGrid(): (Agent | null)[] {

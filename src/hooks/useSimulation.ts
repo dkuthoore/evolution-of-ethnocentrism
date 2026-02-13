@@ -59,6 +59,8 @@ export interface UseSimulationOpts {
   enableHistory?: boolean;
   params?: SimulationParams;
   initialSpeedIndex?: number;
+  /** When set, draw a ring around agents with this phenotype (e.g. Stage 5: highlight ethnocentrists when color = tag). */
+  highlightPhenotype?: Phenotype;
   /** Called once when the engine is created; use to seed so gen/pop update and to avoid flicker */
   onEngineReady?: (api: SimulationEngineApi) => void;
 }
@@ -101,6 +103,7 @@ export function useSimulation(
     enableHistory = true,
     params,
     initialSpeedIndex = 0,
+    highlightPhenotype,
     onEngineReady,
   } = opts;
 
@@ -117,6 +120,7 @@ export function useSimulation(
   const [speedIndex, setSpeedIndex] = useState(initialSpeedIndex);
   const [stats, setStats] = useState<Stats>({
     counts: { ethnocentric: 0, altruist: 0, egoist: 0, traitor: 0 },
+    tagCounts: [0, 0, 0, 0],
     total: 0,
   });
   const [generation, setGeneration] = useState(0);
@@ -207,7 +211,7 @@ export function useSimulation(
       canvasHeight,
       gridW,
       gridH,
-      { usePips, timeMs: now, colorMode }
+      { usePips, timeMs: now, colorMode, highlightPhenotype }
     );
 
     if (enableParticles && particleCanvasRef?.current && particlesRef.current) {
@@ -228,6 +232,7 @@ export function useSimulation(
     gridW,
     gridH,
     usePips,
+    highlightPhenotype,
     enableParticles,
     cellW,
     cellH,

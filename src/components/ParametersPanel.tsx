@@ -121,6 +121,25 @@ function ParametersTable({
   );
 }
 
+function Stage5KeyTakeaway() {
+  return (
+    <div className="absolute right-24 top-1/2 -translate-y-1/2 w-64 z-10 max-h-[85vh] overflow-y-auto">
+      <h3 className="text-sm font-semibold text-white mb-3 text-center">💡 Key Takeaways</h3>
+      <ul className="rounded-lg border border-slate-700 bg-slate-800/90 px-3 py-3 space-y-2 list-disc list-inside text-white text-xs leading-relaxed">
+        <li>
+          Now that tags and strategies are independent, you will not see one <em className="text-white">color</em> dominate—but you will see one <em className="text-white">strategy</em> dominate.
+        </li>
+        <li>
+          The Pips with a black dot will take over the board, no matter which color they are.
+        </li>
+        <li>
+          You will see clusters of the same color form, as ethnocentrists of any color help themselves.
+        </li>
+      </ul>
+    </div>
+  );
+}
+
 function Stage3CasePanel({
   selectedCaseId,
   onCaseChange,
@@ -180,6 +199,9 @@ export function ParametersPanel({
   }
   if (stage === 4) {
     return <ParametersTable parameters={STAGE4_PARAMETERS} />;
+  }
+  if (stage === 5) {
+    return <Stage5KeyTakeaway />;
   }
   return null;
 }

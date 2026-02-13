@@ -48,6 +48,8 @@ export const TAG_COLORS = [
   '#d946ef', // Magenta
 ] as const;
 
+export const TAG_LABELS = ['Blue', 'Orange', 'Teal', 'Magenta'] as const;
+
 // Strategy-to-color mapping (Stages 1–4: color = strategy)
 export const STRATEGY_COLORS: Record<Phenotype, string> = {
   altruist: '#3b82f6',

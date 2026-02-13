@@ -29,8 +29,8 @@ export function Stage4Population() {
       </div>
       <div className="flex min-h-0 flex-1 flex-col items-center min-w-0 w-full max-w-4xl">
         <SimulationWidget
-        gridW={50}
-        gridH={50}
+        gridW={25}
+        gridH={25}
         canvasSize={400}
         colorMode="strategy"
         speedIndex={4}
