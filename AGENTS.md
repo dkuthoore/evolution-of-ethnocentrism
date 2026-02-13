@@ -207,7 +207,7 @@ From **Stage 1 onward**, the app uses a **symmetric three-zone layout** for cons
 
 - **Left**: Strategy legend (`SidebarLegend`) — shown **only from Stage 2** (when strategies are introduced). Fixed position when visible.
 - **Center**: Main content (stage content) — **must stay centered** and must not shift when toggling stages or when legend/parameters are shown.
-- **Right**: Parameters table (`ParametersPanel`) when applicable — same distance from viewport edge and from center content as the legend. Shown on **Stage 1** after the user clicks Cooperate, and on **Stage 2+** always (or when that stage has parameters).
+- **Right**: Right panel (`ParametersPanel`) — same distance from viewport edge and from center content as the legend. On **Stage 1** it shows the **Prisoner’s Dilemma payoff matrix** (PTR change, from `COST`/`BENEFIT` in constants). On **Stage 2+** it shows the parameters table when that stage has one.
 
 **Constraints:**
 
@@ -215,8 +215,6 @@ From **Stage 1 onward**, the app uses a **symmetric three-zone layout** for cons
 - Legend and parameters table must be **equidistant from the viewport edges** (e.g. both use the same edge gap: `left-12` / `right-12`).
 - Legend and parameters must be **equidistant from the content** (same inner gap). Both side panels use the same **effective column width** (e.g. `w-64` / 16rem) so the reserved space on left and right is equal.
 - The center column is implemented in `App.tsx`: when `currentStage >= 1`, `<main>` gets symmetric margins. The legend and parameters are absolutely positioned in the same full-width wrapper; they do not affect the flow of the centered content.
-
-**Stage 1 parameters:** The Stage 1 parameters table (Cost, Benefit) appears in the right panel only after the user clicks “Cooperate”. App holds `hasCooperatedStage1` and passes `onCooperate` to `Stage1Basics`; when the user cooperates, the callback sets the flag and `ParametersPanel` receives `showStage1Params` so it can render the Stage 1 table. Reset `hasCooperatedStage1` when the user leaves Stage 1.
 
 **Do not** put the parameters table inside individual stage components — it lives in `ParametersPanel` and is rendered by `App.tsx` so positioning is consistent and the content does not move.
 

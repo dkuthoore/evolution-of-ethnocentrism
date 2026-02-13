@@ -1,8 +1,9 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { createAgentWithPhenotype } from '../../lib/engine';
 import { drawPip } from '../../lib/pipRenderer';
 import { ParticleSystem } from '../../lib/particles';
-import { COST, BENEFIT } from '../../lib/constants';
+import { COST, BENEFIT, BASE_PTR } from '../../lib/constants';
+import type { Stage1MatrixCell } from '../ParametersPanel';
 
 const GRID_W = 2;
 const GRID_H = 1;
@@ -16,14 +17,27 @@ function createInitialAgents() {
 
 interface Stage1BasicsProps {
   onCooperate?: () => void;
+  /** Called with the matrix cell key when user clicks a scenario button (cc, cd, or dd). */
+  onScenarioClick?: (cell: Stage1MatrixCell) => void;
 }
 
-export function Stage1Basics({ onCooperate }: Stage1BasicsProps) {
+const COOP_OPTS = {
+  numberLifetime: 3200,
+  numberVy: -0.12,
+  spawnFlow: true,
+  numberOffsetY: CELL_H * 0.3,
+  spawnLine: false,
+  numberDelayMs: 900,
+  receiverText: `+${BENEFIT.toFixed(2)}`,
+  giverText: `−${COST.toFixed(2)}`,
+};
+
+export function Stage1Basics({ onCooperate, onScenarioClick }: Stage1BasicsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particleCanvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<ParticleSystem | null>(null);
-  const [hasCooperated, setHasCooperated] = useState(false);
   const agentsRef = useRef(createInitialAgents());
+  const animationRafRef = useRef<number | null>(null);
 
   useEffect(() => {
     particlesRef.current = new ParticleSystem();
@@ -60,70 +74,128 @@ export function Stage1Basics({ onCooperate }: Stage1BasicsProps) {
   const PARTICLE_DURATION_MS = 4500;
 
   const animateParticles = useCallback(() => {
+    if (animationRafRef.current !== null) {
+      cancelAnimationFrame(animationRafRef.current);
+      animationRafRef.current = null;
+    }
     const pCanvas = particleCanvasRef.current;
     if (!pCanvas || !particlesRef.current) return;
     const ctx = pCanvas.getContext('2d');
     if (!ctx) return;
 
-    let rafId: number;
     const start = performance.now();
     const loop = (now: number) => {
       ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
       particlesRef.current!.update(now);
       particlesRef.current!.render(ctx, now, CELL_W, CELL_H);
       if (now - start < PARTICLE_DURATION_MS) {
-        rafId = requestAnimationFrame(loop);
+        animationRafRef.current = requestAnimationFrame(loop);
+      } else {
+        animationRafRef.current = null;
       }
     };
-    rafId = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(rafId);
+    animationRafRef.current = requestAnimationFrame(loop);
   }, []);
 
   useEffect(() => {
     draw();
-  }, [draw, hasCooperated]);
+  }, [draw]);
 
-  const handleCooperate = useCallback(() => {
+  /** Reset both PTRs to base so each scenario shows correct one-shot payoffs. */
+  const resetToBase = useCallback(() => {
     const agents = agentsRef.current;
-    agents[0]!.ptr -= COST;
-    agents[1]!.ptr += BENEFIT;
+    agents[0]!.ptr = BASE_PTR;
+    agents[1]!.ptr = BASE_PTR;
+  }, []);
 
-    particlesRef.current?.spawnCooperation(0, 0, CELL_W, 0, CELL_W, CELL_H, '#3b82f6', {
-      numberLifetime: 3200,
-      numberVy: -0.12,
-      spawnFlow: true,
-      numberOffsetY: CELL_H * 0.3,
-      spawnLine: false,
-      numberDelayMs: 900,
-    });
-    setHasCooperated(true);
+  const handleBothCooperate = useCallback(() => {
+    onScenarioClick?.('cc');
+    resetToBase();
+    const agents = agentsRef.current;
+    agents[0]!.ptr = BASE_PTR - COST + BENEFIT;
+    agents[1]!.ptr = BASE_PTR - COST + BENEFIT;
+    const sys = particlesRef.current;
+    const netCc = (BENEFIT - COST).toFixed(2);
+    const cy = CELL_H / 2 - CELL_H * 0.3;
+    if (sys) {
+      // A → B: line and flow only (no cost/benefit numbers)
+      sys.spawnCooperation(0, 0, CELL_W, 0, CELL_W, CELL_H, '#3b82f6', {
+        spawnLine: true,
+        spawnFlow: true,
+        spawnNumbers: false,
+      });
+      // B → A: line and flow only, slightly delayed
+      sys.spawnCooperation(CELL_W, 0, 0, 0, CELL_W, CELL_H, '#3b82f6', {
+        spawnLine: true,
+        spawnFlow: true,
+        spawnNumbers: false,
+        numberDelayMs: 400,
+      });
+      // Net payoff for each Pip
+      sys.spawn({ x: CELL_W / 2, y: cy, vx: 0, vy: -0.12, text: `+${netCc}`, color: '#22c55e', lifetime: 3200, type: 'number', delay: 900 });
+      sys.spawn({ x: CELL_W + CELL_W / 2, y: cy, vx: 0, vy: -0.12, text: `+${netCc}`, color: '#22c55e', lifetime: 3200, type: 'number', delay: 900 });
+    }
     onCooperate?.();
     animateParticles();
-  }, [animateParticles, onCooperate]);
-
-  const handleReset = useCallback(() => {
-    agentsRef.current = createInitialAgents();
-    particlesRef.current?.clear();
-    const pCanvas = particleCanvasRef.current;
-    if (pCanvas) {
-      const ctx = pCanvas.getContext('2d');
-      ctx?.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-    }
-    setHasCooperated(false);
     draw();
-  }, [draw]);
+  }, [resetToBase, onCooperate, onScenarioClick, animateParticles, draw]);
+
+  const handleOneCooperateOneDefect = useCallback(() => {
+    onScenarioClick?.('cd');
+    onScenarioClick?.('dc');
+    resetToBase();
+    const agents = agentsRef.current;
+    agents[0]!.ptr = BASE_PTR - COST;
+    agents[1]!.ptr = BASE_PTR + BENEFIT;
+    // A cooperates, B defects: show one flow from A (giver) to B (receiver), then numbers above each
+    particlesRef.current?.spawnCooperation(0, 0, CELL_W, 0, CELL_W, CELL_H, '#3b82f6', {
+      ...COOP_OPTS,
+      spawnLine: true,
+      spawnFlow: true,
+      spawnNumbers: true,
+      receiverText: `+${BENEFIT.toFixed(2)}`,
+      giverText: `−${COST.toFixed(2)}`,
+      numberDelayMs: 400,
+    });
+    onCooperate?.();
+    animateParticles();
+    draw();
+  }, [resetToBase, onCooperate, onScenarioClick, animateParticles, draw]);
+
+  const handleBothDefect = useCallback(() => {
+    onScenarioClick?.('dd');
+    resetToBase();
+    const sys = particlesRef.current;
+    const cxA = CELL_W / 2;
+    const cy = CELL_H / 2 - CELL_H * 0.3;
+    const cxB = CELL_W + CELL_W / 2;
+    if (sys) {
+      sys.spawn({ x: cxA, y: cy, vx: 0, vy: -0.12, text: '0', color: '#94a3b8', lifetime: 2200, type: 'number' });
+      sys.spawn({ x: cxB, y: cy, vx: 0, vy: -0.12, text: '0', color: '#94a3b8', lifetime: 2200, type: 'number' });
+    }
+    animateParticles();
+    draw();
+  }, [resetToBase, onScenarioClick, animateParticles, draw]);
 
   return (
     <div className="h-full flex flex-col px-4 overflow-hidden relative">
       <h2 className="text-2xl font-bold text-white text-center mt-4 mb-2 shrink-0">Meet the Pips</h2>
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-4">
         <div className="flex flex-col items-center gap-4 shrink-0">
-          <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5">
-            <p className="text-slate-400 text-center">
-              Below we have two &quot;Pips&quot;. Pips mind their own business and are happy on their own, but sometimes Pips have neighbors.
+          <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5 space-y-4">
+            <p className="text-slate-300 text-center">
+              Below we have two &quot;Pips&quot;. When they meet, they can cooperate or defect with each other. This creates a classic <strong>Prisoner&apos;s Dilemma</strong>:
             </p>
-            <p className="text-slate-400 text-center mt-4">
-              When a Pip has a neighbor, they can either cooperate with them or not. If they cooperate, it costs them something — but they increase their neighbor&apos;s &quot;Potential to Reproduce&quot; (PTR), which helps that neighbor reproduce in the next generation.
+            <ul className="text-slate-400 text-sm space-y-1 list-disc list-inside pl-2">
+              <li>If both cooperate, both gain net 0.02 (receive 0.03, pay 0.01)</li>
+              <li>If one defects and the other cooperates, one gains 0.03 at no cost, while the other loses 0.01 and gains nothing.</li>
+              <li>If both defect, nothing happens for either party.</li>
+            </ul>
+            <p className="text-slate-400 text-center text-sm">
+              Defection is always the individually rational choice in a single interaction (you either free-ride or avoid being exploited), but mutual cooperation beats mutual defection.
+            </p>
+            <p className="text-slate-400 text-center text-sm">
+              Click the 3 different options below to see the costs and payoffs.
             </p>
           </div>
           <div className="relative">
@@ -142,19 +214,24 @@ export function Stage1Basics({ onCooperate }: Stage1BasicsProps) {
               aria-hidden
             />
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-3 justify-center">
             <button
-              onClick={handleCooperate}
-              disabled={hasCooperated}
-              className="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-600 disabled:cursor-not-allowed rounded-lg text-white font-bold text-lg transition-colors"
+              onClick={handleBothCooperate}
+              className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white font-semibold text-sm transition-colors"
             >
-              Cooperate
+              Both cooperate
             </button>
             <button
-              onClick={handleReset}
-              className="px-6 py-3 bg-slate-600 hover:bg-slate-500 rounded-lg text-white font-bold text-lg transition-colors"
+              onClick={handleOneCooperateOneDefect}
+              className="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 rounded-lg text-white font-semibold text-sm transition-colors"
             >
-              Reset
+              One cooperates, one defects
+            </button>
+            <button
+              onClick={handleBothDefect}
+              className="px-5 py-2.5 bg-slate-600 hover:bg-slate-500 rounded-lg text-white font-semibold text-sm transition-colors"
+            >
+              Both defect
             </button>
           </div>
         </div>

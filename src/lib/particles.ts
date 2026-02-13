@@ -30,6 +30,12 @@ export interface SpawnCooperationOpts {
   spawnLine?: boolean;
   /** Delay (ms) before number particles appear (so flow can complete first). */
   numberDelayMs?: number;
+  /** Text shown at receiver (default '+3%'). */
+  receiverText?: string;
+  /** Text shown at giver (default '-1%'). */
+  giverText?: string;
+  /** If false, only spawn line and flow particles, not the +/- number particles (default true). */
+  spawnNumbers?: boolean;
 }
 
 export class ParticleSystem {
@@ -65,6 +71,9 @@ export class ParticleSystem {
     const numberOffsetY = opts?.numberOffsetY ?? 0;
     const spawnLine = opts?.spawnLine ?? true;
     const numberDelayMs = opts?.numberDelayMs ?? 0;
+    const spawnNumbers = opts?.spawnNumbers !== false;
+    const receiverText = opts?.receiverText ?? '+3%';
+    const giverText = opts?.giverText ?? '-1%';
 
     if (spawnLine) {
       this.spawn({
@@ -79,28 +88,30 @@ export class ParticleSystem {
         type: 'line',
       });
     }
-    this.spawn({
-      x: rx,
-      y: ry - numberOffsetY,
-      vx: 0,
-      vy: numberVy,
-      text: '+3%',
-      color: '#22c55e',
-      lifetime: numberLifetime,
-      type: 'number',
-      delay: numberDelayMs,
-    });
-    this.spawn({
-      x: gx,
-      y: gy - numberOffsetY,
-      vx: 0,
-      vy: numberVy,
-      text: '-1%',
-      color: '#ef4444',
-      lifetime: numberLifetime,
-      type: 'number',
-      delay: numberDelayMs,
-    });
+    if (spawnNumbers) {
+      this.spawn({
+        x: rx,
+        y: ry - numberOffsetY,
+        vx: 0,
+        vy: numberVy,
+        text: receiverText,
+        color: '#22c55e',
+        lifetime: numberLifetime,
+        type: 'number',
+        delay: numberDelayMs,
+      });
+      this.spawn({
+        x: gx,
+        y: gy - numberOffsetY,
+        vx: 0,
+        vy: numberVy,
+        text: giverText,
+        color: '#ef4444',
+        lifetime: numberLifetime,
+        type: 'number',
+        delay: numberDelayMs,
+      });
+    }
 
     if (opts?.spawnFlow) {
       for (let i = 0; i < 5; i++) {

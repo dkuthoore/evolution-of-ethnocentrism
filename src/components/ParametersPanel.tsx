@@ -1,7 +1,63 @@
-const STAGE1_PARAMETERS = [
-  { param: 'Cost', description: 'PTR −1% when donating. Giving is costly.' },
-  { param: 'Benefit', description: 'PTR +3% when receiving. Receiving helps.' },
-];
+import { COST, BENEFIT } from '../lib/constants';
+
+/** Cell keys: A's action (c/d), B's action (c/d). */
+export type Stage1MatrixCell = 'cc' | 'cd' | 'dc' | 'dd';
+
+const NET_CC = BENEFIT - COST; // +0.02 when both cooperate
+
+function PayoffMatrix({ revealedCells }: { revealedCells?: Set<Stage1MatrixCell> }) {
+  const net = NET_CC.toFixed(2);
+  const cost = COST.toFixed(2);
+  const benefit = BENEFIT.toFixed(2);
+  const empty = <span className="text-slate-500">—</span>;
+  const show = (cell: Stage1MatrixCell) => revealedCells?.has(cell) ?? false;
+  return (
+    <div className="absolute right-12 top-1/2 -translate-y-1/2 w-64 z-10">
+      <h3 className="text-sm font-semibold text-white mb-2 text-center">Payoff matrix (PTR change)</h3>
+      <p className="text-xs text-slate-400 text-center mb-2">(A, B)</p>
+      <div className="rounded-lg border border-slate-700 overflow-hidden">
+        <table className="w-full text-xs">
+          <colgroup>
+            <col className="w-24" />
+            <col className="w-auto" />
+            <col className="w-auto" />
+          </colgroup>
+          <thead>
+            <tr className="bg-slate-800 text-slate-300">
+              <th className="w-24" />
+              <th className="px-2 py-2 text-center font-medium">B cooperates</th>
+              <th className="px-2 py-2 text-center font-medium">B defects</th>
+            </tr>
+          </thead>
+          <tbody className="tabular-nums">
+            <tr className="border-t border-slate-700">
+              <td className="px-2 py-2 bg-slate-800 text-slate-300 font-medium">A cooperates</td>
+              <td className="px-2 py-2 text-center bg-slate-800/80">
+                {show('cc') ? <span className="text-emerald-400">+{net}, +{net}</span> : empty}
+              </td>
+              <td className="px-2 py-2 text-center bg-slate-800/80">
+                {show('cd') ? (
+                  <><span className="text-rose-400">−{cost}</span>, <span className="text-emerald-400">+{benefit}</span></>
+                ) : empty}
+              </td>
+            </tr>
+            <tr className="border-t border-slate-700">
+              <td className="px-2 py-2 bg-slate-800 text-slate-300 font-medium">A defects</td>
+              <td className="px-2 py-2 text-center bg-slate-800/80">
+                {show('dc') ? (
+                  <><span className="text-emerald-400">+{benefit}</span>, <span className="text-rose-400">−{cost}</span></>
+                ) : empty}
+              </td>
+              <td className="px-2 py-2 text-center bg-slate-800/80">
+                {show('dd') ? <span className="text-slate-400">0, 0</span> : empty}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
 
 const STAGE2_PARAMETERS = [
   { param: 'Cost', description: 'PTR −1% when donating. Giving is costly.' },
@@ -48,13 +104,13 @@ function ParametersTable({
 
 export function ParametersPanel({
   stage,
-  showStage1Params = false,
+  stage1RevealedCells,
 }: {
   stage: number;
-  showStage1Params?: boolean;
+  stage1RevealedCells?: Set<Stage1MatrixCell>;
 }) {
-  if (stage === 1 && showStage1Params) {
-    return <ParametersTable parameters={STAGE1_PARAMETERS} colWidth="w-16" />;
+  if (stage === 1) {
+    return <PayoffMatrix revealedCells={stage1RevealedCells} />;
   }
   if (stage === 2) {
     return <ParametersTable parameters={STAGE2_PARAMETERS} />;
