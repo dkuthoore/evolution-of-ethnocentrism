@@ -1,91 +1,69 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { SimulationWidget } from '../SimulationWidget';
 import type { SimulationWidgetApi } from '../SimulationWidget';
+import { DISTRIBUTION_PRESETS } from '../../lib/constants';
 import type { SimulationParams } from '../../lib/constants';
 
-export function Stage6GodMode() {
-  const [params, setParams] = useState<SimulationParams>({});
+const GRID_SIZE = 25;
+const CANVAS_SIZE = 400;
+const FILL_RATIO = 0.5;
+
+export function Stage6GodMode({ params }: { params: SimulationParams }) {
+  const [preset, setPreset] = useState<string>('Equal Mix');
   const simApiRef = useRef<SimulationWidgetApi | null>(null);
 
-  const updateParam = useCallback(<K extends keyof SimulationParams>(key: K, value: SimulationParams[K]) => {
-    setParams((p) => ({ ...p, [key]: value }));
-  }, []);
+  const distribution = DISTRIBUTION_PRESETS[preset] ?? DISTRIBUTION_PRESETS['Equal Mix']!;
+
+  const onReady = useCallback((api: SimulationWidgetApi) => {
+    api.seedByDistribution(distribution, FILL_RATIO);
+  }, [distribution]);
 
   useEffect(() => {
     simApiRef.current?.setParams(params);
   }, [params]);
 
+  useEffect(() => {
+    simApiRef.current?.seedByDistribution(distribution, FILL_RATIO);
+  }, [distribution]);
+
   return (
-    <div className="h-full flex flex-col items-center justify-center gap-6 px-4 overflow-auto">
-      <h2 className="text-2xl font-bold text-white">God Mode</h2>
-      <p className="text-slate-400 text-center max-w-xl">
-        Tweak the parameters. Use the brush to paint, the meteor to clear, or inspect any Pip.
-      </p>
-      <SimulationWidget
-        gridW={50}
-        gridH={50}
-        canvasSize={400}
-        colorMode="tags"
-        speedIndex={5}
-        showChart={true}
-        enableHistory={true}
-        enableParticles={false}
-        params={params}
-        allowPainting={true}
-        simApiRef={simApiRef}
-        extraControls={
-          <div className="flex flex-wrap gap-4 items-center">
-            <div>
-              <label className="text-xs text-slate-400 block">Cost %</label>
-              <input
-                type="range"
-                min={0}
-                max={5}
-                step={0.1}
-                value={(params.cost ?? 0.01) * 100}
-                onChange={(e) => updateParam('cost', Number(e.target.value) / 100)}
-                className="w-24 accent-blue-500"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-slate-400 block">Benefit %</label>
-              <input
-                type="range"
-                min={0}
-                max={10}
-                step={0.1}
-                value={(params.benefit ?? 0.03) * 100}
-                onChange={(e) => updateParam('benefit', Number(e.target.value) / 100)}
-                className="w-24 accent-blue-500"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-slate-400 block">Death Rate %</label>
-              <input
-                type="range"
-                min={0}
-                max={30}
-                step={1}
-                value={(params.deathRate ?? 0.1) * 100}
-                onChange={(e) => updateParam('deathRate', Number(e.target.value) / 100)}
-                className="w-24 accent-blue-500"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-slate-400 block">Mutation %</label>
-              <input
-                type="range"
-                min={0}
-                max={5}
-                step={0.1}
-                value={(params.mutationRate ?? 0.005) * 100}
-                onChange={(e) => updateParam('mutationRate', Number(e.target.value) / 100)}
-                className="w-24 accent-blue-500"
-              />
-            </div>
-          </div>
-        }
-      />
+    <div className="flex min-h-0 flex-1 flex-col items-center gap-4 px-4 overflow-hidden">
+      <h2 className="flex-shrink-0 text-2xl font-bold text-white">Playground</h2>
+      <div className="flex-shrink-0 max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5">
+        <p className="text-slate-300 text-center">
+          Feel free to tweak parameters, make your own simulations, see what you find!
+        </p>
+      </div>
+      <div className="flex min-h-0 flex-1 flex-col items-center min-w-0 w-full max-w-4xl">
+        <SimulationWidget
+          gridW={GRID_SIZE}
+          gridH={GRID_SIZE}
+          canvasSize={CANVAS_SIZE}
+          colorMode="strategy"
+          speedIndex={4}
+          showChart={true}
+          enableHistory={true}
+          enableParticles={false}
+          playPauseVariant="greenRed"
+          speedSliderVariant="index1To5"
+          params={params}
+          allowPainting={false}
+          extraControls={
+            <select
+              value={preset}
+              onChange={(e) => setPreset(e.target.value)}
+              className="bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white text-sm min-w-0 max-w-[160px] shrink-0"
+            >
+              {Object.keys(DISTRIBUTION_PRESETS).map((key) => (
+                <option key={key} value={key}>{key}</option>
+              ))}
+            </select>
+          }
+          simApiRef={simApiRef}
+          onReady={onReady}
+          onReset={() => simApiRef.current?.seedByDistribution(distribution, FILL_RATIO)}
+        />
+      </div>
     </div>
   );
 }

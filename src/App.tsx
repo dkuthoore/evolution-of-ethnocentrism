@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { HeaderLegend } from './components/HeaderLegend';
 import { HomePage } from './components/HomePage';
-import { ParametersPanel } from './components/ParametersPanel';
+import { ParametersPanel, Stage1LeftPanel } from './components/ParametersPanel';
 import { SidebarLegend } from './components/SidebarLegend';
 import { FooterNav } from './components/FooterNav';
+import { DEFAULT_PARAMS } from './lib/constants';
+import type { SimulationParams } from './lib/constants';
 import {
   Stage1Basics,
   Stage2Homogeneous,
@@ -25,6 +27,7 @@ function App() {
   const [currentStage, setCurrentStage] = useState(0);
   const [stage1RevealedCells, setStage1RevealedCells] = useState<Set<Stage1MatrixCell>>(new Set());
   const [stage3CaseId, setStage3CaseId] = useState<ClashCaseId>('altruist-vs-egoist');
+  const [stage6Params, setStage6Params] = useState<SimulationParams>(() => ({ ...DEFAULT_PARAMS }));
 
   useEffect(() => {
     if (currentStage !== 1) setStage1RevealedCells(new Set());
@@ -50,6 +53,7 @@ function App() {
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-slate-900 text-white">
       <HeaderLegend />
       <div className="relative flex min-h-0 flex-1">
+        {currentStage === 1 && <Stage1LeftPanel revealedCells={stage1RevealedCells} />}
         {showLegend && <SidebarLegend />}
         {showParameters && (
           <ParametersPanel
@@ -57,6 +61,8 @@ function App() {
             stage1RevealedCells={currentStage === 1 ? stage1RevealedCells : undefined}
             stage3CaseId={currentStage === 3 ? stage3CaseId : undefined}
             onStage3CaseChange={currentStage === 3 ? setStage3CaseId : undefined}
+            stage6Params={currentStage === 6 ? stage6Params : undefined}
+            onStage6ParamsChange={currentStage === 6 ? setStage6Params : undefined}
           />
         )}
         <main
@@ -74,7 +80,7 @@ function App() {
           )}
           {currentStage === 4 && <Stage4Population />}
           {currentStage === 5 && <Stage5Evolution />}
-          {currentStage === 6 && <Stage6GodMode />}
+          {currentStage === 6 && <Stage6GodMode params={stage6Params} />}
           {currentStage === 7 && <Stage7Takeaways />}
         </main>
       </div>
