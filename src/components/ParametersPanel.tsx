@@ -80,9 +80,9 @@ const STAGE4_PARAMETERS = [
   { param: 'Cost', description: 'PTR −1% when donating. Giving is costly.' },
   { param: 'Benefit', description: 'PTR +3% when receiving. Receiving helps.' },
   { param: 'BasePTR', description: 'PTR reset to 12% at start of each tick.' },
-  { param: 'Death rate', description: '10% chance per agent per tick to die. Creates space.' },
+  { param: 'Death rate', description: '10% chance per agent per generation to die.' },
   { param: 'Mutation rate', description: 'Chance an offspring is a different strategy (e.g. 0.5% per birth).' },
-  { param: 'Immigration rate', description: 'Max new Pips per tick in empty cells (e.g. 1).' },
+  { param: 'Immigration rate', description: 'Each generation, one new Pip is generated in a random empty cell.' },
 ];
 
 function ParametersTable({

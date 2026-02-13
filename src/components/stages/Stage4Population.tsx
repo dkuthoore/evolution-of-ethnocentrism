@@ -24,7 +24,7 @@ export function Stage4Population() {
       <h2 className="flex-shrink-0 text-2xl font-bold text-white">Population Dynamics</h2>
       <div className="flex-shrink-0 max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5">
         <p className="text-slate-300 text-center">
-          Now let&apos;s put all four strategies in one world. The grid starts half full. Choose a starting mix and hit Play to run. We also add two new forces to the simulation: <strong className="text-slate-200">mutation</strong> (offspring can randomly become a different strategy) and <strong className="text-slate-200">immigration</strong> (empty cells can get a new random Pip). Watch how the mix evolves and which strategy wins.
+          Now let&apos;s put all four strategies in one world. Choose a starting mix and hit Play to run. We also add two new forces to the simulation: <strong className="text-slate-200">mutation rate</strong> and <strong className="text-slate-200">immigration rate</strong>. Watch how the mix evolves and which strategy wins.
         </p>
       </div>
       <div className="flex min-h-0 flex-1 flex-col items-center min-w-0 w-full max-w-4xl">
