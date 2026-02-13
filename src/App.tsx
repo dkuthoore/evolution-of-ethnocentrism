@@ -11,9 +11,10 @@ import {
   Stage4Population,
   Stage5Evolution,
   Stage6GodMode,
+  Stage7Takeaways,
 } from './components/stages';
 
-const TOTAL_STAGES = 6;
+const TOTAL_STAGES = 7;
 
 /** Symmetric side panels: panels at left-24/right-24 (6rem), width 16rem; main margin 22rem (ml-88/mr-88) so content starts where panels end. */
 
@@ -74,6 +75,7 @@ function App() {
           {currentStage === 4 && <Stage4Population />}
           {currentStage === 5 && <Stage5Evolution />}
           {currentStage === 6 && <Stage6GodMode />}
+          {currentStage === 7 && <Stage7Takeaways />}
         </main>
       </div>
       <FooterNav stage={currentStage} setStage={setCurrentStage} total={TOTAL_STAGES} />
