@@ -46,7 +46,7 @@ function App() {
   }
 
   const useSymmetricLayout = currentStage >= 1;
-  const showLegend = currentStage >= 2 && currentStage !== 5 && currentStage !== 6 && currentStage !== 7;
+  const showLegend = currentStage >= 2 && currentStage !== 4 && currentStage !== 5 && currentStage !== 6 && currentStage !== 7;
   const showParameters = currentStage >= 1;
 
   return (

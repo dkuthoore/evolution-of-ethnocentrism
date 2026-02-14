@@ -40,11 +40,11 @@ export function Stage4Population() {
         speedIndex={4}
         showChart={true}
         enableHistory={true}
+        chartInLeftPane={true}
         enableParticles={false}
         playPauseVariant="greenRed"
         speedSliderVariant="index1To5"
         spaceBeforeCanvas="large"
-        chartShiftLeft
         extraControls={
           <div className="self-start w-28 sm:w-32 md:w-40 min-w-0">
             <select
