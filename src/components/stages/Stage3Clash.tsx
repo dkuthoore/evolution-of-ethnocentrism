@@ -166,18 +166,20 @@ export function Stage3Clash({
 
   return (
     <div className="h-full flex flex-col px-4 overflow-hidden relative">
-      <h2 className="text-2xl font-bold text-white text-center mt-4 mb-2 shrink-0">The Clash of Two</h2>
+      <div className="shrink-0 pt-4 h-16">
+        <h2 className="text-2xl font-bold text-white text-center">The Clash of Two</h2>
+      </div>
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-4">
         <div className="flex flex-col items-center gap-5 shrink-0">
           <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5">
             <p className="text-slate-300 text-center">
-              What happens when <em>two</em> strategies share the same grid? Pick a case in the panel on the right and hit Play.
+              What happens when <em>two</em> strategies share the same grid? Pick a case below and hit Play.
             </p>
           </div>
           <SimulationWidget
             gridW={15}
             gridH={15}
-            canvasSize={360}
+            canvasSize={385}
             scenario={SCENARIO_CLASH}
             colorMode="strategy"
             speedIndex={4}
@@ -191,6 +193,19 @@ export function Stage3Clash({
             simApiRef={simApiRef}
             onReady={onReady}
             onReset={() => simApiRef.current?.seedTwoGroups(selectedCase.groupA, selectedCase.groupB, 0.5, 0.5)}
+            extraControls={
+              <div className="self-start w-28 sm:w-32 md:w-40 min-w-0">
+                <select
+                  value={selectedCaseId}
+                  onChange={(e) => onCaseChange(e.target.value as ClashCaseId)}
+                  className="w-full min-w-0 bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white text-sm"
+                >
+                  {CLASH_CASES.map((c) => (
+                    <option key={c.id} value={c.id}>{c.label}</option>
+                  ))}
+                </select>
+              </div>
+            }
           />
         </div>
       </div>

@@ -119,15 +119,17 @@ export function Stage2Homogeneous() {
 
   return (
     <div className="h-full flex flex-col px-4 overflow-hidden relative">
-      <h2 className="text-2xl font-bold text-white text-center mt-4 mb-2 shrink-0">Pip Strategies</h2>
+      <div className="shrink-0 pt-4 h-16">
+        <h2 className="text-2xl font-bold text-white text-center">Pip Strategies</h2>
+      </div>
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-4">
         <div className="flex flex-col items-center gap-5 shrink-0">
-          <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5">
-            <p className="text-slate-300 text-center mb-4">
+          <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-4 py-3">
+            <p className="text-slate-300 text-center text-sm mb-2">
               Now let&apos;s run a simple simulation.
             </p>
-            <p className="text-slate-400 text-sm font-medium mb-2">Each round:</p>
-            <ol className="text-slate-400 text-sm list-decimal list-inside space-y-2 mb-5 pl-1">
+            <p className="text-slate-400 text-sm font-medium mb-1">Each round:</p>
+            <ol className="text-slate-400 text-sm list-decimal list-inside space-y-1 mb-0 pl-1">
               <li>Each Pip starts with a PTR of 12%</li>
               <li>Neighboring Pips interact with each other (or don&apos;t)</li>
               <li>They have a chance (PTR %) to reproduce </li>

@@ -179,22 +179,24 @@ export function Stage1Basics({ onCooperate, onScenarioClick }: Stage1BasicsProps
 
   return (
     <div className="h-full flex flex-col px-4 overflow-hidden relative">
-      <h2 className="text-2xl font-bold text-white text-center mt-4 mb-2 shrink-0">Meet the Pips</h2>
+      <div className="shrink-0 pt-4 h-16">
+        <h2 className="text-2xl font-bold text-white text-center">Meet the Pips</h2>
+      </div>
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-4">
         <div className="flex flex-col items-center gap-4 shrink-0">
-          <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5 space-y-4">
-            <p className="text-slate-300 text-center">
+          <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-4 py-3 space-y-2">
+            <p className="text-slate-300 text-center text-sm">
               Below we have two &quot;Pips&quot;. When they meet, they can cooperate or defect with each other. This creates a classic <strong>Prisoner&apos;s Dilemma</strong>:
             </p>
-            <ul className="text-slate-400 text-sm space-y-1 list-disc list-inside pl-2">
+            <ul className="text-slate-400 text-sm space-y-0.5 list-disc list-inside pl-2">
               <li>If both cooperate, both gain net 0.02 (receive 0.03, pay 0.01)</li>
               <li>If one defects and the other cooperates, one gains 0.03 at no cost, while the other loses 0.01 and gains nothing.</li>
               <li>If both defect, nothing happens for either party.</li>
             </ul>
-            <p className="text-slate-400 text-center text-sm">
-              Click the 3 different options below to see the costs and payoffs.
-            </p>
           </div>
+          <p className="text-slate-400 text-center text-sm">
+            Click the 3 different options below to see the costs and payoffs.
+          </p>
           <div className="relative">
             <canvas
               ref={canvasRef}

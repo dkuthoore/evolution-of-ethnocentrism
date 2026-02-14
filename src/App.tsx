@@ -18,7 +18,7 @@ import {
 
 const TOTAL_STAGES = 7;
 
-/** Symmetric side panels: panels at left-24/right-24 (6rem), width 16rem; main margin 22rem (ml-88/mr-88) so content starts where panels end. */
+/** Symmetric side panels: panels at left-12/right-12 (3rem), width up to 20rem; main margin 20rem (ml-80/mr-80) so center content is wider. */
 
 import type { Stage1MatrixCell } from './components/ParametersPanel';
 import type { ClashCaseId } from './components/stages/Stage3Clash';
@@ -66,7 +66,7 @@ function App() {
           />
         )}
         <main
-          className={`flex min-h-0 flex-1 flex-col overflow-hidden ${useSymmetricLayout ? 'ml-88 mr-88' : ''}`}
+          className={`flex min-h-0 flex-1 flex-col overflow-hidden ${useSymmetricLayout ? 'ml-80 mr-80' : ''}`}
         >
           {currentStage === 1 && (
             <Stage1Basics onScenarioClick={revealStage1Cell} />

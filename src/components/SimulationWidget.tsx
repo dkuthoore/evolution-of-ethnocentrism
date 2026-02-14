@@ -30,6 +30,8 @@ export interface SimulationWidgetProps {
   showChart?: boolean;
   showSpeed?: boolean;
   showDemographics?: boolean;
+  /** When true, show both "By strategy" and "By tag" demographics (Stage 5). */
+  demographicsByTag?: boolean;
   enableParticles?: boolean;
   enableHistory?: boolean;
   /** Custom reset handler - e.g. reseed with distribution. If not provided, calls sim.reset() */
@@ -45,10 +47,12 @@ export interface SimulationWidgetProps {
   playPauseVariant?: 'default' | 'greenRed';
   /** When 'index1To5', speed slider shows 1–5 (maps to speedIndex 0–4). Default 'tps'. */
   speedSliderVariant?: 'tps' | 'index1To5';
-  /** When set, draw a ring around agents with this phenotype (e.g. Stage 5: ethnocentrists when color = tag). */
+  /** Extra space above the grid (below controls). Use 'large' on Stage 4. */
+  spaceBeforeCanvas?: 'default' | 'large';
+  /** Slight left shift for the Population Over Time chart only (keeps header in place). */
+  chartShiftLeft?: boolean;
+  /** When set, draw a black dot on agents with this phenotype (e.g. Stage 5: ethnocentrists when color = tag). */
   highlightPhenotype?: Phenotype;
-  /** When true, demographics show counts by tag (Demographics by Tag) and chart title is "Strategies Over Time". */
-  demographicsByTag?: boolean;
 }
 
 type GodTool = 'none' | 'brush' | 'meteor' | 'inspect';
@@ -64,6 +68,7 @@ export function SimulationWidget({
   showChart = false,
   showSpeed = true,
   showDemographics = true,
+  demographicsByTag = false,
   enableParticles = true,
   enableHistory = false,
   onReset,
@@ -73,8 +78,9 @@ export function SimulationWidget({
   extraControls,
   playPauseVariant = 'default',
   speedSliderVariant = 'tps',
+  spaceBeforeCanvas = 'default',
+  chartShiftLeft = false,
   highlightPhenotype,
-  demographicsByTag = false,
 }: SimulationWidgetProps) {
   const [activeTool, setActiveTool] = useState<GodTool>('none');
   const [brushPhenotype, setBrushPhenotype] = useState<Phenotype>('ethnocentric');
@@ -128,7 +134,6 @@ export function SimulationWidget({
 
   const total = sim.stats.total || 1;
   const pct = (c: Phenotype) => (((sim.stats.counts[c] ?? 0) / total) * 100).toFixed(1);
-  const tagPct = (tagIndex: number) => (((sim.stats.tagCounts?.[tagIndex] ?? 0) / total) * 100).toFixed(1);
 
   const handleCanvasMouseMove = useCallback(
     (e: MouseEvent<HTMLCanvasElement>) => {
@@ -172,8 +177,8 @@ export function SimulationWidget({
   }, []);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col lg:flex-row gap-4 flex-nowrap">
-      <div className="flex flex-shrink-0 flex-col gap-2" style={{ maxWidth: canvasSize }}>
+    <div className="flex flex-col lg:flex-row gap-4 flex-wrap">
+      <div className="flex flex-col gap-2 items-start shrink-0" style={{ minWidth: canvasSize }}>
         {allowPainting && (
           <div className="flex gap-2 items-center flex-wrap">
             <button onClick={() => setActiveTool('none')} className={`p-2 rounded ${activeTool === 'none' ? 'bg-slate-600' : 'bg-slate-700'}`}>—</button>
@@ -189,10 +194,10 @@ export function SimulationWidget({
             )}
           </div>
         )}
-        <div className="flex gap-2 flex-nowrap items-center">
+        <div className="flex gap-2 items-center flex-nowrap">
           <button
             onClick={sim.isRunning ? sim.pause : sim.play}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium ${
+            className={`inline-flex items-center justify-center gap-2 w-28 shrink-0 px-4 py-2 rounded-lg text-white font-medium ${
               playPauseVariant === 'greenRed'
                 ? sim.isRunning
                   ? 'bg-red-600 hover:bg-red-500'
@@ -201,7 +206,7 @@ export function SimulationWidget({
             }`}
           >
             {sim.isRunning ? <Pause size={18} /> : <Play size={18} />}
-            {sim.isRunning ? 'Pause' : 'Play'}
+            <span className="w-12 text-left inline-block">{sim.isRunning ? 'Pause' : 'Play'}</span>
           </button>
           <button
             onClick={handleReset}
@@ -212,7 +217,7 @@ export function SimulationWidget({
           </button>
           {extraControls}
         </div>
-        <div className="relative bg-slate-800 rounded-lg overflow-hidden border border-slate-700 inline-block">
+        <div className={`relative bg-slate-800 rounded-lg overflow-hidden border border-slate-700 inline-block ${spaceBeforeCanvas === 'large' ? 'mt-2' : ''}`}>
           <canvas
             ref={canvasRef}
             width={canvasSize}
@@ -243,7 +248,7 @@ export function SimulationWidget({
         </div>
       </div>
 
-      <div className={`flex flex-col gap-4 min-w-[200px] ${showChart ? 'min-h-0 flex-1' : ''}`}>
+      <div className="flex flex-col gap-4 min-w-[200px]">
         {showSpeed && (
           <div>
             <h4 className="text-sm font-semibold text-slate-300 mb-1">Speed</h4>
@@ -277,32 +282,40 @@ export function SimulationWidget({
         <div className="text-sm text-slate-400">
           Gen {sim.generation} · Pop {sim.stats.total}
         </div>
-        {showDemographics && demographicsByTag && (
-          <>
-            <div>
-              <h4 className="text-sm font-semibold text-slate-300 mb-2">Demographics (by Tag)</h4>
-              <div className="space-y-2">
-                {TAG_LABELS.map((label, tagIndex) => (
-                  <div key={tagIndex}>
-                    <div className="flex justify-between text-xs">
-                      <span>{label}</span>
-                      <span>{tagPct(tagIndex)}%</span>
-                    </div>
-                    <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all"
-                        style={{
-                          width: `${tagPct(tagIndex)}%`,
-                          backgroundColor: TAG_COLORS[tagIndex],
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
+        {showDemographics && (
+          <div className="space-y-4">
+            {demographicsByTag && (
+              <div>
+                <h4 className="text-sm font-semibold text-slate-300 mb-2">Demographics (by tag)</h4>
+                <div className="space-y-2">
+                  {(TAG_LABELS as unknown as string[]).map((label, i) => {
+                    const count = sim.stats.tagCounts[i] ?? 0;
+                    const pctTag = sim.stats.total > 0 ? (100 * count) / sim.stats.total : 0;
+                    return (
+                      <div key={i}>
+                        <div className="flex justify-between text-xs">
+                          <span>{label}</span>
+                          <span>{pctTag.toFixed(1)}%</span>
+                        </div>
+                        <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all"
+                            style={{
+                              width: `${pctTag}%`,
+                              backgroundColor: TAG_COLORS[i],
+                            }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
             <div>
-              <h4 className="text-sm font-semibold text-slate-300 mb-2">Demographics (by Strategy)</h4>
+              <h4 className="text-sm font-semibold text-slate-300 mb-2">
+                Demographics{demographicsByTag ? ' (by strategy)' : ''}
+              </h4>
               <div className="space-y-2">
                 {(['ethnocentric', 'altruist', 'egoist', 'traitor'] as const).map((key) => (
                   <div key={key}>
@@ -326,40 +339,13 @@ export function SimulationWidget({
                 ))}
               </div>
             </div>
-          </>
-        )}
-        {showDemographics && !demographicsByTag && (
-          <div>
-            <h4 className="text-sm font-semibold text-slate-300 mb-2">Demographics</h4>
-            <div className="space-y-2">
-              {(['ethnocentric', 'altruist', 'egoist', 'traitor'] as const).map((key) => (
-                <div key={key}>
-                  <div className="flex justify-between text-xs">
-                    <span>{key === 'ethnocentric' ? 'Ethnocentrist' : key === 'altruist' ? 'Altruist' : key === 'egoist' ? 'Egoist' : 'Traitor'}</span>
-                    <span>{pct(key)}%</span>
-                  </div>
-                  <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${pct(key)}%`,
-                        backgroundColor:
-                          key === 'ethnocentric' ? '#a855f7' :
-                          key === 'altruist' ? '#3b82f6' :
-                          key === 'egoist' ? '#ef4444' : '#eab308',
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         )}
-        {showChart && !demographicsByTag && !sim.isRunning && sim.history.length > 1 && (
-          <div className="flex min-h-0 flex-1 flex-col w-full max-w-sm">
-            <h4 className="flex-shrink-0 text-sm font-semibold text-slate-300 mb-1">Population Over Time</h4>
-            <div className="min-h-0 flex-1 h-full">
-              <PopulationChart history={sim.history} height={'100%'} />
+        {showChart && !sim.isRunning && sim.history.length > 1 && (
+          <div className="w-full max-w-sm">
+            <h4 className="text-sm font-semibold text-slate-300 mb-1">Population Over Time</h4>
+            <div className={chartShiftLeft ? '-ml-8' : undefined}>
+              <PopulationChart history={sim.history} height={180} />
             </div>
           </div>
         )}

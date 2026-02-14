@@ -5,7 +5,7 @@ import { DISTRIBUTION_PRESETS } from '../../lib/constants';
 import type { SimulationParams } from '../../lib/constants';
 
 const GRID_SIZE = 25;
-const CANVAS_SIZE = 400;
+const CANVAS_SIZE = 385;
 const FILL_RATIO = 0.5;
 
 export function Stage6GodMode({ params }: { params: SimulationParams }) {
@@ -28,7 +28,9 @@ export function Stage6GodMode({ params }: { params: SimulationParams }) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col items-center gap-4 px-4 overflow-hidden">
-      <h2 className="flex-shrink-0 text-2xl font-bold text-white">Playground</h2>
+      <div className="shrink-0 pt-4 h-16 w-full">
+        <h2 className="text-2xl font-bold text-white text-center">Playground</h2>
+      </div>
       <div className="flex-shrink-0 max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5">
         <p className="text-slate-300 text-center">
           Feel free to tweak parameters, make your own simulations, see what you find!
@@ -46,18 +48,21 @@ export function Stage6GodMode({ params }: { params: SimulationParams }) {
           enableParticles={false}
           playPauseVariant="greenRed"
           speedSliderVariant="index1To5"
+          chartShiftLeft
           params={params}
           allowPainting={false}
           extraControls={
-            <select
-              value={preset}
-              onChange={(e) => setPreset(e.target.value)}
-              className="bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white text-sm min-w-0 max-w-[160px] shrink-0"
-            >
-              {Object.keys(DISTRIBUTION_PRESETS).map((key) => (
-                <option key={key} value={key}>{key}</option>
-              ))}
-            </select>
+            <div className="self-start w-28 sm:w-32 md:w-40 min-w-0">
+              <select
+                value={preset}
+                onChange={(e) => setPreset(e.target.value)}
+                className="w-full min-w-0 bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white text-sm"
+              >
+                {Object.keys(DISTRIBUTION_PRESETS).map((key) => (
+                  <option key={key} value={key}>{key}</option>
+                ))}
+              </select>
+            </div>
           }
           simApiRef={simApiRef}
           onReady={onReady}

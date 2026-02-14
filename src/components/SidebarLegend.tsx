@@ -18,7 +18,7 @@ const LEGEND_ITEMS: { phenotype: Phenotype; definition: string }[] = [
 export function SidebarLegend() {
   return (
     <aside
-      className="absolute left-24 top-1/2 -translate-y-1/2 w-64 px-3 py-4 z-10"
+      className="absolute left-12 top-1/2 -translate-y-1/2 w-64 px-3 py-4 z-10"
       role="navigation"
       aria-label="Pip strategy legend"
     >

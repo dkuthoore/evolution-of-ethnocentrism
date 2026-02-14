@@ -10,9 +10,12 @@ export function Stage7Takeaways() {
   };
 
   return (
-    <div className="h-full flex flex-col px-4 py-6 overflow-auto">
-      <div className="max-w-2xl mx-auto w-full space-y-2">
-        <h2 className="text-2xl font-bold text-white text-center mb-6">Summary</h2>
+    <div className="h-full flex flex-col px-4 overflow-hidden">
+      <div className="shrink-0 pt-4 h-16">
+        <h2 className="text-2xl font-bold text-white text-center">Summary</h2>
+      </div>
+      <div className="flex-1 min-h-0 overflow-auto py-6">
+        <div className="max-w-2xl mx-auto w-full space-y-2">
 
         <section className="rounded-xl bg-slate-800/50 border border-slate-700 overflow-hidden">
           <button
@@ -149,6 +152,7 @@ export function Stage7Takeaways() {
             </div>
           )}
         </section>
+        </div>
       </div>
     </div>
   );
