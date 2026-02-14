@@ -14,7 +14,7 @@ export function Stage7Takeaways() {
       <div className="shrink-0 pt-4 h-16">
         <h2 className="text-2xl font-bold text-white text-center">Summary</h2>
       </div>
-      <div className="flex-1 min-h-0 overflow-auto py-6">
+      <div className="flex-1 min-h-0 overflow-auto py-6 scrollbar-hide">
         <div className="max-w-2xl mx-auto w-full space-y-2">
 
         <section className="rounded-xl bg-slate-800/50 border border-slate-700 overflow-hidden">
@@ -95,7 +95,13 @@ export function Stage7Takeaways() {
             <strong className="text-slate-200">Politics</strong> may be the most striking contemporary example. Party identity has become a tag that precedes and shapes policy views, rather than following from them. People update their positions to match their team. In-group cooperation is real and tangible — donations, hiring, professional loyalty — and out-group hostility has intensified far faster than actual policy disagreement. Legislation with broad public support stalls because cross-party cooperation would mean giving the other side a win. The system produces less than it could, exactly as the model predicts.
           </p>
           <p className="text-white text-sm">
-            <strong className="text-slate-200">Gangs, corporate teams, academic schools of thought, sports fans, ethnic business networks</strong> all follow the same structure — arbitrary or semi-arbitrary markers enabling in-group trust and out-group exclusion. The content of the tag varies wildly. The dynamic is always the same.
+            <strong className="text-slate-200">Academic and intellectual tribes.</strong> Schools of thought in academia — Keynesian vs. monetarist economists, Freudians vs. behaviorists — show strong in-group citation, mutual promotion, and coordinated skepticism toward outsiders. Researchers genuinely cooperate more with tag-mates and are harsher reviewers of out-group work, even when they&apos;d deny doing so.
+          </p>
+          <p className="text-white text-sm">
+            <strong className="text-slate-200">Gangs, corporate teams, sports fans, ethnic business networks</strong> all follow the same structure — arbitrary or semi-arbitrary markers enabling in-group trust and out-group exclusion. The content of the tag varies wildly. The dynamic is always the same.
+          </p>
+          <p className="text-white text-sm">
+            In each case, an initially small or arbitrary distinction can get weaponized or institutionalized. Cooperative clusters form around it and the dynamic becomes self-sustaining. Once that happens, the tag starts doing real social work — shaping who you marry, who you hire, who you trust, who you fear — which makes it feel increasingly real and meaningful even though it may have started from almost nothing. The model predicts exactly this: you don&apos;t need a meaningful tag to start the process, but once the process starts, the tag becomes meaningful.
           </p>
             </div>
           )}
