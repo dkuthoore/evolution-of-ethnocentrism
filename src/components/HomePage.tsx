@@ -40,7 +40,6 @@ export function HomePage({ onExplore }: HomePageProps) {
         </button>
       </div>
       <footer className="py-4 text-center text-sm text-slate-200">
-        By: Damian Kuthoore, 2026
       </footer>
     </div>
   );
