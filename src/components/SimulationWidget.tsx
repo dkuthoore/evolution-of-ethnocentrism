@@ -53,6 +53,10 @@ export interface SimulationWidgetProps {
   chartShiftLeft?: boolean;
   /** When set, draw a black dot on agents with this phenotype (e.g. Stage 5: ethnocentrists when color = tag). */
   highlightPhenotype?: Phenotype;
+  /** When true, render the Population Over Time chart in the left sidebar (e.g. Stage 5). Only when paused. */
+  chartInLeftPane?: boolean;
+  /** When true, overlay tag demographics as lines on the chart (e.g. Stage 5). */
+  chartShowTagOverlay?: boolean;
 }
 
 type GodTool = 'none' | 'brush' | 'meteor' | 'inspect';
@@ -81,6 +85,8 @@ export function SimulationWidget({
   spaceBeforeCanvas = 'default',
   chartShiftLeft = false,
   highlightPhenotype,
+  chartInLeftPane = false,
+  chartShowTagOverlay = false,
 }: SimulationWidgetProps) {
   const [activeTool, setActiveTool] = useState<GodTool>('none');
   const [brushPhenotype, setBrushPhenotype] = useState<Phenotype>('ethnocentric');
@@ -235,7 +241,7 @@ export function SimulationWidget({
               style={{ left: tooltipPos.x + 12, top: tooltipPos.y + 12 }}
             >
               <div className="font-medium">{getPhenotype(hoveredAgent.agent)}</div>
-              <div className="text-xs text-slate-400">PTR: {(hoveredAgent.agent.ptr * 100).toFixed(0)}%</div>
+              <div className="text-xs text-white">PTR: {(hoveredAgent.agent.ptr * 100).toFixed(0)}%</div>
             </div>
           )}
           <canvas
@@ -251,7 +257,7 @@ export function SimulationWidget({
       <div className="flex flex-col gap-4 min-w-[200px]">
         {showSpeed && (
           <div>
-            <h4 className="text-sm font-semibold text-slate-300 mb-1">Speed</h4>
+            <h4 className="text-sm font-semibold text-white mb-1">Speed</h4>
             {speedSliderVariant === 'index1To5' ? (
               <>
                 <input
@@ -260,9 +266,9 @@ export function SimulationWidget({
                   max={5}
                   value={Math.min(5, Math.max(1, sim.speedIndex + 1))}
                   onChange={(e) => sim.setSpeedIndex(Math.max(0, Number(e.target.value) - 1))}
-                  className="w-full accent-blue-500"
+                  className="w-full accent-sky-500"
                 />
-                <p className="text-xs text-slate-500">{Math.min(5, Math.max(1, sim.speedIndex + 1))}</p>
+                <p className="text-xs text-slate-200">{Math.min(5, Math.max(1, sim.speedIndex + 1))}</p>
               </>
             ) : (
               <>
@@ -272,21 +278,21 @@ export function SimulationWidget({
                   max={SPEEDS.length - 1}
                   value={sim.speedIndex}
                   onChange={(e) => sim.setSpeedIndex(Number(e.target.value))}
-                  className="w-full accent-blue-500"
+                  className="w-full accent-sky-500"
                 />
-                <p className="text-xs text-slate-500">{SPEEDS[sim.speedIndex]} TPS</p>
+                <p className="text-xs text-slate-200">{SPEEDS[sim.speedIndex]} TPS</p>
               </>
             )}
           </div>
         )}
-        <div className="text-sm text-slate-400">
+        <div className="text-sm text-white">
           Gen {sim.generation} · Pop {sim.stats.total}
         </div>
         {showDemographics && (
           <div className="space-y-4">
             {demographicsByTag && (
               <div>
-                <h4 className="text-sm font-semibold text-slate-300 mb-2">Demographics (by tag)</h4>
+                <h4 className="text-sm font-semibold text-white mb-2">Demographics (by tag)</h4>
                 <div className="space-y-2">
                   {(TAG_LABELS as unknown as string[]).map((label, i) => {
                     const count = sim.stats.tagCounts[i] ?? 0;
@@ -313,7 +319,7 @@ export function SimulationWidget({
               </div>
             )}
             <div>
-              <h4 className="text-sm font-semibold text-slate-300 mb-2">
+              <h4 className="text-sm font-semibold text-white mb-2">
                 Demographics{demographicsByTag ? ' (by strategy)' : ''}
               </h4>
               <div className="space-y-2">
@@ -341,11 +347,19 @@ export function SimulationWidget({
             </div>
           </div>
         )}
-        {showChart && !sim.isRunning && sim.history.length > 1 && (
+        {showChart && sim.history.length > 1 && chartInLeftPane && (
+          <div className="fixed left-12 top-1/2 -translate-y-1/2 w-80 z-10 px-3" aria-label="Population over time">
+            <h4 className="text-sm font-semibold text-white mb-1">Population Over Time</h4>
+            <div className="-ml-8">
+              <PopulationChart history={sim.history} height={320} showTagOverlay={chartShowTagOverlay} />
+            </div>
+          </div>
+        )}
+        {showChart && sim.history.length > 1 && !chartInLeftPane && (
           <div className="w-full max-w-sm">
-            <h4 className="text-sm font-semibold text-slate-300 mb-1">Population Over Time</h4>
+            <h4 className="text-sm font-semibold text-white mb-1">Population Over Time</h4>
             <div className={chartShiftLeft ? '-ml-8' : undefined}>
-              <PopulationChart history={sim.history} height={180} />
+              <PopulationChart history={sim.history} height={180} showTagOverlay={chartShowTagOverlay} />
             </div>
           </div>
         )}

@@ -29,7 +29,7 @@ export function Stage5Evolution() {
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-4">
         <div className="flex flex-col items-center gap-5 shrink-0 max-w-2xl">
           <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-4 py-3 space-y-2">
-            <p className="text-slate-300 text-center text-sm">
+            <p className="text-white text-center text-sm">
               So far, a pip&apos;s color has represented its strategy. Now we introduce the concept of <strong className="text-slate-200">tags</strong>. Tags are any characteristic that a demographic identifies with, in this case - color. Pips can see each other&apos;s tags (colors), but do not know each other&apos;s strategies. We highlight the ethnocentrists with a black dot in the center.
             </p>
           </div>
@@ -40,8 +40,10 @@ export function Stage5Evolution() {
             scenario={SCENARIO_STANDARD}
             colorMode="tags"
             speedIndex={4}
-            showChart={false}
-            enableHistory={false}
+            showChart={true}
+            enableHistory={true}
+            chartInLeftPane={true}
+            chartShowTagOverlay={true}
             enableParticles={false}
             playPauseVariant="greenRed"
             speedSliderVariant="index1To5"

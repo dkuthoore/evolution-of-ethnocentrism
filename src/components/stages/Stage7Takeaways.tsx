@@ -25,17 +25,17 @@ export function Stage7Takeaways() {
             aria-expanded={expandedId === 'why-matters'}
           >
             <h3 className="text-lg font-semibold text-white">Why this study matters</h3>
-            <span className="text-slate-400 shrink-0 ml-2" aria-hidden>
+            <span className="text-white shrink-0 ml-2" aria-hidden>
               {expandedId === 'why-matters' ? '▼' : '▶'}
             </span>
           </button>
           {expandedId === 'why-matters' && (
             <div className="px-6 pb-5 pt-0 space-y-3 border-t border-slate-700">
-          <p className="text-slate-300 text-sm pt-3">
-            The paper asks: <strong className="text-slate-200">why does ethnocentrism</strong> — favoring in-group members over out-group members — <strong className="text-slate-200">emerge and persist</strong>, even when it seems individually costly? Using a simple agent-based simulation, Axelrod and Hammond show that ethnocentric strategies consistently dominate. Ethnocentric agents form clusters of like-tagged cooperators that out-compete both unconditional cooperators (who get exploited) and defectors. The mechanism is <strong className="text-slate-200">spatial clustering</strong>: ethnocentrics are surrounded by similar agents, so they receive cooperation often while being protected from out-group defectors.
+          <p className="text-white text-sm pt-3">
+            Most explanations for tribalism assume it requires something real — shared ancestry, common beliefs, a genuine threat from outsiders. This paper challenges that assumption. Using a simple computer simulation, Axelrod and Hammond show that in-group favoritism doesn&apos;t need any of that. It can emerge spontaneously, from nothing more than arbitrary group labels and the basic logic of cooperation and competition.
           </p>
-          <p className="text-slate-300 text-sm">
-            Importantly, ethnocentrism doesn’t require sophisticated cognition, culture, or genetic relatedness — it can emerge purely from the structure of local interaction and reproduction.
+          <p className="text-white text-sm">
+            The mechanism is surprisingly simple: agents who cooperate with their own group and defect against others tend to cluster together, which means they receive cooperation often while being shielded from exploitation. Over time, this strategy out-competes both unconditional cooperators (who get taken advantage of) and unconditional defectors (who cooperate with no one). No culture, no cognition, no kinship required — just a tag and a population.
           </p>
             </div>
           )}
@@ -49,17 +49,21 @@ export function Stage7Takeaways() {
             aria-expanded={expandedId === 'implications'}
           >
             <h3 className="text-lg font-semibold text-white">Implications</h3>
-            <span className="text-slate-400 shrink-0 ml-2" aria-hidden>
+            <span className="text-white shrink-0 ml-2" aria-hidden>
               {expandedId === 'implications' ? '▼' : '▶'}
             </span>
           </button>
           {expandedId === 'implications' && (
-            <div className="px-6 pb-5 pt-0 border-t border-slate-700">
-          <ul className="text-slate-300 text-sm space-y-2 list-disc list-inside pl-1 pt-3">
-            <li><strong className="text-slate-200">Tags are meaningless.</strong> In the model, tags and strategies are assigned independently. A tag carries zero information about how an agent will behave — yet it still drives discrimination. Prejudice can be evolutionarily stable even when the basis for group distinctions is entirely superficial.</li>
-            <li><strong className="text-slate-200">Ethnocentrism is not globally optimal.</strong> Universal cooperation would maximize total welfare. Ethnocentrism wastes defection at boundaries and locks the population into a lower-welfare equilibrium — like an arms race where neither side can unilaterally drop their guard.</li>
-            <li><strong className="text-slate-200">The tag creates the reality.</strong> What wins is the ethnocentric strategy itself, not any particular tag. Once a tag exists and ethnocentric strategies cluster around it, the dynamic becomes self-sustaining regardless of whether the original distinction was meaningful.</li>
-          </ul>
+            <div className="px-6 pb-5 pt-0 border-t border-slate-700 space-y-4 pt-3">
+          <p className="text-white text-sm">
+            <strong className="text-slate-200">The tag doesn&apos;t need to mean anything.</strong> In the model, tags and strategies are assigned independently and randomly. A tag carries zero information about how an agent will actually behave — yet it still drives discrimination and shapes who cooperates with whom. This is the paper&apos;s most unsettling finding: prejudice can become evolutionarily stable even when the basis for group distinction is entirely arbitrary. The tag doesn&apos;t reflect a real difference. It creates one.
+          </p>
+          <p className="text-white text-sm">
+            <strong className="text-slate-200">Tribalism is not globally optimal — just competitively stable.</strong> Universal cooperation would produce the best outcome for everyone. Tribalism wastes enormous value at group boundaries — every cross-group interaction that defaults to defection is a missed opportunity for mutual gain. But once tribalism takes hold, no individual can unilaterally abandon it without being exploited. The population gets locked into a worse equilibrium, like an arms race where both sides would be better off disarming but neither can go first.
+          </p>
+          <p className="text-white text-sm">
+            <strong className="text-slate-200">Evolution doesn&apos;t optimize for the common good.</strong> What wins in the simulation isn&apos;t what&apos;s best for the group as a whole — it&apos;s what&apos;s hardest to exploit. That distinction matters enormously for how we think about human nature. Our tribal instincts aren&apos;t a design flaw or a cultural artifact. They&apos;re the predictable output of a selection process that rewards competitive survival, not collective flourishing.
+          </p>
             </div>
           )}
         </section>
@@ -72,23 +76,27 @@ export function Stage7Takeaways() {
             aria-expanded={expandedId === 'where-shows-up'}
           >
             <h3 className="text-lg font-semibold text-white">Where this shows up in society</h3>
-            <span className="text-slate-400 shrink-0 ml-2" aria-hidden>
+            <span className="text-white shrink-0 ml-2" aria-hidden>
               {expandedId === 'where-shows-up' ? '▼' : '▶'}
             </span>
           </button>
           {expandedId === 'where-shows-up' && (
-            <div className="px-6 pb-5 pt-0 border-t border-slate-700 space-y-3">
-          <p className="text-slate-300 text-sm pt-3">
-            The same structure — strong in-group cooperation, out-group defection, arbitrary tags — appears in many real settings:
+            <div className="px-6 pb-5 pt-0 border-t border-slate-700 space-y-4 pt-3">
+          <p className="text-white text-sm">
+            Once you see the pattern — arbitrary tag, in-group cooperation, out-group defection, self-reinforcing dynamic — it&apos;s hard to unsee it. It appears across vastly different contexts, which is what makes the model so powerful.
           </p>
-          <ul className="text-slate-300 text-sm space-y-2 list-disc list-inside pl-1">
-            <li><strong className="text-slate-200">Religion:</strong> Internal cooperation and costly signals (dietary laws, dress, rituals) act like tags; Mormons, Orthodox Jews, Amish.</li>
-            <li><strong className="text-slate-200">Nationalism:</strong> Taxes, military service, welfare for co-nationals; borders and passports as tags.</li>
-            <li><strong className="text-slate-200">Gangs:</strong> Colors, tattoos, symbols as literal tags; loyalty inside, defection outside.</li>
-            <li><strong className="text-slate-200">Corporate tribalism:</strong> Team identity boosts cooperation inside, turf wars and information hoarding between teams.</li>
-            <li><strong className="text-slate-200">Politics:</strong> Party identity (red vs. blue) has become a tag that drives positions; in-group cooperation (donations, hiring, benefit of the doubt) and out-group defection (affective polarization) match the model. Legislation with broad support can stall because cross-party cooperation is punished.</li>
-            <li><strong className="text-slate-200">Sports fans, ethnic business networks, academic tribes:</strong> Same pattern — arbitrary markers enabling in-group trust and out-group boundaries.</li>
-          </ul>
+          <p className="text-white text-sm">
+            <strong className="text-slate-200">Religion</strong> uses costly signals (dietary laws, dress codes, rituals) as tags. These signals are expensive enough that only committed members maintain them, which makes them reliable filters for finding trustworthy cooperators. The result is tight internal solidarity and sharp boundaries against outsiders.
+          </p>
+          <p className="text-white text-sm">
+            <strong className="text-slate-200">Nationalism</strong> scales the same logic to the level of states. Citizens accept significant personal costs — taxes, military service, civic obligations — for co-nationals they&apos;ll never meet, while extending far less to foreigners. Borders and passports are institutional tags.
+          </p>
+          <p className="text-white text-sm">
+            <strong className="text-slate-200">Politics</strong> may be the most striking contemporary example. Party identity has become a tag that precedes and shapes policy views, rather than following from them. People update their positions to match their team. In-group cooperation is real and tangible — donations, hiring, professional loyalty — and out-group hostility has intensified far faster than actual policy disagreement. Legislation with broad public support stalls because cross-party cooperation would mean giving the other side a win. The system produces less than it could, exactly as the model predicts.
+          </p>
+          <p className="text-white text-sm">
+            <strong className="text-slate-200">Gangs, corporate teams, academic schools of thought, sports fans, ethnic business networks</strong> all follow the same structure — arbitrary or semi-arbitrary markers enabling in-group trust and out-group exclusion. The content of the tag varies wildly. The dynamic is always the same.
+          </p>
             </div>
           )}
         </section>
@@ -101,53 +109,56 @@ export function Stage7Takeaways() {
             aria-expanded={expandedId === 'evolution-of-trust'}
           >
             <h3 className="text-lg font-semibold text-white">How this differs from The Evolution of Trust</h3>
-            <span className="text-slate-400 shrink-0 ml-2" aria-hidden>
+            <span className="text-white shrink-0 ml-2" aria-hidden>
               {expandedId === 'evolution-of-trust' ? '▼' : '▶'}
             </span>
           </button>
           {expandedId === 'evolution-of-trust' && (
-            <div className="px-6 pb-5 pt-0 border-t border-slate-700 space-y-3">
-          <p className="text-slate-300 text-sm pt-3">
-            <strong className="text-slate-200">The Evolution of Trust</strong> (Nicky Case’s interactive, from Axelrod’s tournament work) is about <strong className="text-slate-200">two players over repeated interactions</strong>. Repetition changes everything: when you’ll meet the same person again, cooperation can emerge through Tit-for-Tat and reputation. Trust is built or destroyed through a history of interactions; the shadow of the future makes cooperation rational.
+            <div className="px-6 pb-5 pt-0 border-t border-slate-700 space-y-4 pt-3">
+          <p className="text-white text-sm">
+            These two models are often discussed together, but they&apos;re solving fundamentally different problems.
           </p>
-          <p className="text-slate-300 text-sm">
-            <strong className="text-slate-200">The Evolution of Ethnocentrism</strong> strips that away. There are <strong className="text-slate-200">no repeated interactions</strong> — agents meet once, anonymously. So reputation, reciprocity, and punishment are absent. The puzzle is: how does cooperation emerge at all? The answer: <strong className="text-slate-200">population structure and tags substitute for repetition</strong>. You don’t need to remember your partner’s history if you can use their tag as a proxy; selection over generations does the rest.
+          <p className="text-white text-sm">
+            <strong className="text-slate-200">The Evolution of Trust</strong> is about what happens between two specific people over time. Repeated interaction changes the math of cooperation entirely — if you&apos;ll meet the same person again, defecting today has consequences tomorrow. Strategies like Tit-for-Tat work because the future casts a shadow over the present. Trust is earned or destroyed through history between particular individuals.
           </p>
-          <div className="rounded-lg border border-slate-600 overflow-hidden mt-3">
+          <p className="text-white text-sm">
+            <strong className="text-slate-200">The Evolution of Ethnocentrism</strong> strips all of that away. Agents meet once, anonymously, and never again. There&apos;s no reputation, no memory, no possibility of punishment or forgiveness. The question becomes: how does cooperation emerge at all without any of those mechanisms? The answer is that <strong className="text-slate-200">tags and population structure substitute for repeated interaction</strong>. You don&apos;t need your partner&apos;s history if their tag gives you a proxy. Selection over generations does the work that memory and punishment do in the repeated game.
+          </p>
+          <div className="rounded-lg border border-slate-600 overflow-hidden">
             <table className="w-full text-xs">
               <thead>
-                <tr className="bg-slate-800 text-slate-300">
-                  <th className="px-3 py-2 text-left font-medium w-28">Aspect</th>
+                <tr className="bg-slate-800 text-white">
+                  <th className="px-3 py-2 text-left font-medium w-28" />
                   <th className="px-3 py-2 text-left font-medium">Evolution of Trust</th>
                   <th className="px-3 py-2 text-left font-medium">Evolution of Ethnocentrism</th>
                 </tr>
               </thead>
-              <tbody className="text-slate-400">
+              <tbody className="text-white">
                 <tr className="border-t border-slate-700">
-                  <td className="px-3 py-2 font-medium text-slate-300">Unit</td>
+                  <td className="px-3 py-2 font-medium text-white">Setup</td>
                   <td className="px-3 py-2">Two players, repeated interactions</td>
                   <td className="px-3 py-2">Whole population, one-shot interactions</td>
                 </tr>
                 <tr className="border-t border-slate-700">
-                  <td className="px-3 py-2 font-medium text-slate-300">Mechanism</td>
+                  <td className="px-3 py-2 font-medium text-white">Cooperation mechanism</td>
                   <td className="px-3 py-2">Reciprocity, reputation, punishment</td>
                   <td className="px-3 py-2">Tags, spatial clustering, selection</td>
                 </tr>
                 <tr className="border-t border-slate-700">
-                  <td className="px-3 py-2 font-medium text-slate-300">Insight</td>
+                  <td className="px-3 py-2 font-medium text-white">Core insight</td>
                   <td className="px-3 py-2">Repetition makes cooperation rational</td>
                   <td className="px-3 py-2">Tags substitute for repetition</td>
                 </tr>
                 <tr className="border-t border-slate-700">
-                  <td className="px-3 py-2 font-medium text-slate-300">Explains</td>
+                  <td className="px-3 py-2 font-medium text-white">Explains</td>
                   <td className="px-3 py-2">Why you trust your long-term partner</td>
-                  <td className="px-3 py-2">Why you help a stranger in your team’s jersey</td>
+                  <td className="px-3 py-2">Why you help a stranger wearing your team&apos;s jersey</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p className="text-slate-300 text-sm mt-3">
-            The two models are <strong className="text-slate-200">complementary</strong>. In the real world both operate: we use tags to find likely cooperators, then repeated interaction to build or destroy trust with specific individuals.
+          <p className="text-white text-sm">
+            The two models are complementary rather than competing. In real life both operate at once — we use tags to identify likely cooperators, then build or destroy actual trust through repeated experience with specific individuals. The first explains your relationship with a colleague you&apos;ve known for years. The second explains why you felt an instant bond with a stranger at the airport wearing your university&apos;s sweatshirt.
           </p>
             </div>
           )}

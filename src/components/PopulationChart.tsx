@@ -1,25 +1,28 @@
 import {
   AreaChart,
   Area,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
 } from 'recharts';
 import type { HistoryEntry } from '../hooks/useSimulation';
-import { STRATEGY_COLORS } from '../lib/constants';
+import { STRATEGY_COLORS, TAG_COLORS, TAG_LABELS } from '../lib/constants';
 
 interface PopulationChartProps {
   history: HistoryEntry[];
   /** Pixel height or '100%' to fill the parent (parent must have a defined height) */
   height?: number | '100%';
+  /** When true, overlay tag counts as lines (e.g. Stage 5). */
+  showTagOverlay?: boolean;
 }
 
-export function PopulationChart({ history, height = 200 }: PopulationChartProps) {
+export function PopulationChart({ history, height = 200, showTagOverlay = false }: PopulationChartProps) {
   const maxGen = history.length > 0 ? history[history.length - 1]!.generation : 0;
   const xDomain: [number, number] = [0, maxGen];
   const useFullHeight = height === '100%';
+  const tagKeys = ['tag0', 'tag1', 'tag2', 'tag3'] as const;
 
   return (
     <div
@@ -42,15 +45,6 @@ export function PopulationChart({ history, height = 200 }: PopulationChartProps)
             tickFormatter={(v) => `Gen ${v}`}
           />
           <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={(v) => v} />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: '#1e293b',
-              border: '1px solid #334155',
-              borderRadius: '8px',
-            }}
-            labelFormatter={(v) => `Generation ${v}`}
-            formatter={(value: number, name: string) => [value, name]} 
-          />
           <Area
             type="monotone"
             dataKey="ethnocentric"
@@ -87,6 +81,18 @@ export function PopulationChart({ history, height = 200 }: PopulationChartProps)
             fillOpacity={0.7}
             name="Traitor"
           />
+          {showTagOverlay && tagKeys.map((key, i) => (
+            <Line
+              key={key}
+              type="monotone"
+              dataKey={key}
+              stroke={TAG_COLORS[i]}
+              strokeWidth={2}
+              dot={false}
+              name={TAG_LABELS[i]}
+              isAnimationActive={false}
+            />
+          ))}
         </AreaChart>
       </ResponsiveContainer>
     </div>

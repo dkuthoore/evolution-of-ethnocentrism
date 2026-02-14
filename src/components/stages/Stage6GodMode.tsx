@@ -27,16 +27,18 @@ export function Stage6GodMode({ params }: { params: SimulationParams }) {
   }, [distribution]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col items-center gap-4 px-4 overflow-hidden">
+    <div className="flex min-h-0 flex-1 flex-col px-4 overflow-hidden">
       <div className="shrink-0 pt-4 h-16 w-full">
         <h2 className="text-2xl font-bold text-white text-center">Playground</h2>
       </div>
-      <div className="flex-shrink-0 max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5">
-        <p className="text-slate-300 text-center">
-          Feel free to tweak parameters, make your own simulations, see what you find!
-        </p>
-      </div>
-      <div className="flex min-h-0 flex-1 flex-col items-center min-w-0 w-full max-w-4xl">
+      <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-4">
+        <div className="flex flex-col items-center gap-4 shrink-0 w-full max-w-4xl">
+          <div className="flex-shrink-0 max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5">
+            <p className="text-white text-center">
+              Feel free to tweak parameters, make your own simulations, see what you find!
+            </p>
+          </div>
+          <div className="flex min-h-0 flex-1 flex-col items-center min-w-0 w-full max-w-4xl">
         <SimulationWidget
           gridW={GRID_SIZE}
           gridH={GRID_SIZE}
@@ -45,6 +47,7 @@ export function Stage6GodMode({ params }: { params: SimulationParams }) {
           speedIndex={4}
           showChart={true}
           enableHistory={true}
+          chartInLeftPane={true}
           enableParticles={false}
           playPauseVariant="greenRed"
           speedSliderVariant="index1To5"
@@ -68,6 +71,8 @@ export function Stage6GodMode({ params }: { params: SimulationParams }) {
           onReady={onReady}
           onReset={() => simApiRef.current?.seedByDistribution(distribution, FILL_RATIO)}
         />
+          </div>
+        </div>
       </div>
     </div>
   );

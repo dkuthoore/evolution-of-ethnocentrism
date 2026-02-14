@@ -12,6 +12,7 @@ import { getPhenotype } from '../lib/engine';
 import type { Agent } from '../lib/engine';
 
 const STATS_UPDATE_INTERVAL_MS = 80; // ~12.5 updates/sec max
+const HISTORY_FLUSH_INTERVAL_MS = 40; // Flush chart data more often than stats to reduce pause jump
 const HISTORY_SAMPLE_INTERVAL = 15; // Sample every N ticks
 const HISTORY_MAX_LENGTH = 500;
 
@@ -32,6 +33,11 @@ export interface HistoryEntry {
   altruist: number;
   egoist: number;
   traitor: number;
+  /** Tag counts (0–3) for overlay when color mode = tags (e.g. Stage 5). */
+  tag0?: number;
+  tag1?: number;
+  tag2?: number;
+  tag3?: number;
 }
 
 /** API passed to onEngineReady so parents can seed after the engine exists */
@@ -132,6 +138,7 @@ export function useSimulation(
   const accumulatorRef = useRef(0);
   const lastTimeRef = useRef(0);
   const lastStatsUpdateRef = useRef(0);
+  const lastHistoryFlushRef = useRef(0);
   const rafIdRef = useRef<number | null>(null);
 
   const cellW = canvasWidth / gridW;
@@ -265,11 +272,22 @@ export function useSimulation(
         altruist: s.counts.altruist,
         egoist: s.counts.egoist,
         traitor: s.counts.traitor,
+        tag0: s.tagCounts[0],
+        tag1: s.tagCounts[1],
+        tag2: s.tagCounts[2],
+        tag3: s.tagCounts[3],
       };
       historyRef.current = downsampleHistory(
         [...historyRef.current, entry],
         HISTORY_MAX_LENGTH
       );
+    }
+  }, [enableHistory]);
+
+  const maybeFlushHistory = useCallback((now: number) => {
+    if (!enableHistory || historyRef.current.length <= 1) return;
+    if (now - lastHistoryFlushRef.current >= HISTORY_FLUSH_INTERVAL_MS) {
+      lastHistoryFlushRef.current = now;
       setHistory(historyRef.current);
     }
   }, [enableHistory]);
@@ -290,6 +308,7 @@ export function useSimulation(
         }
         draw();
         maybeUpdateStats(currentTime);
+        maybeFlushHistory(currentTime);
       } else {
         const ticksPerFrame = Math.floor(targetTPS / 60);
         for (let i = 0; i < ticksPerFrame; i++) {
@@ -297,11 +316,12 @@ export function useSimulation(
         }
         draw();
         maybeUpdateStats(currentTime);
+        maybeFlushHistory(currentTime);
       }
 
       rafIdRef.current = requestAnimationFrame(loopRef.current);
     },
-    [tick, draw, maybeUpdateStats]
+    [tick, draw, maybeUpdateStats, maybeFlushHistory]
   );
   loopRef.current = loop; // eslint-disable-line react-hooks/refs
 
@@ -325,6 +345,13 @@ export function useSimulation(
       draw();
     }
   }, [viewMode, colorMode, scenario, draw, isRunning]);
+
+  // Flush history to React state when pausing so chart shows final resolution
+  useEffect(() => {
+    if (!isRunning && historyRef.current.length > 0) {
+      setHistory(historyRef.current);
+    }
+  }, [isRunning]);
 
   const reset = useCallback(() => {
     if (engineRef.current) {
@@ -370,6 +397,10 @@ export function useSimulation(
         altruist: stats.counts.altruist,
         egoist: stats.counts.egoist,
         traitor: stats.counts.traitor,
+        tag0: stats.tagCounts[0],
+        tag1: stats.tagCounts[1],
+        tag2: stats.tagCounts[2],
+        tag3: stats.tagCounts[3],
       };
       historyRef.current = [initial];
       setHistory([initial]);
@@ -400,6 +431,10 @@ export function useSimulation(
         altruist: stats.counts.altruist,
         egoist: stats.counts.egoist,
         traitor: stats.counts.traitor,
+        tag0: stats.tagCounts[0],
+        tag1: stats.tagCounts[1],
+        tag2: stats.tagCounts[2],
+        tag3: stats.tagCounts[3],
       };
       historyRef.current = [initial];
       setHistory([initial]);

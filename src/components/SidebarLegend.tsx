@@ -42,7 +42,7 @@ export function SidebarLegend() {
                 {PHENOTYPE_LABELS[phenotype]}
               </span>
             </div>
-            <span className="text-slate-500 text-xs">{definition}</span>
+            <span className="text-slate-200 text-xs">{definition}</span>
           </div>
         ))}
       </div>

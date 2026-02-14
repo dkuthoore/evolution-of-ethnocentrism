@@ -90,7 +90,7 @@ function MiniGrid({ phenotype, index, controlsRef, speedIndex }: MiniGridProps) 
 
   return (
     <div className="flex flex-col gap-1 items-center">
-      <span className="text-xs font-medium text-slate-300">{PHENOTYPE_PLURAL_LABELS[phenotype]}</span>
+      <span className="text-xs font-medium text-white">{PHENOTYPE_PLURAL_LABELS[phenotype]}</span>
       <div className="relative">
         <canvas ref={canvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} className="block rounded border border-slate-600" />
         <canvas ref={particleCanvasRef} width={CANVAS_SIZE} height={CANVAS_SIZE} className="absolute inset-0 pointer-events-none" aria-hidden />
@@ -125,11 +125,11 @@ export function Stage2Homogeneous() {
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-4">
         <div className="flex flex-col items-center gap-5 shrink-0">
           <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-4 py-3">
-            <p className="text-slate-300 text-center text-sm mb-2">
+            <p className="text-white text-center text-sm mb-2">
               Now let&apos;s run a simple simulation.
             </p>
-            <p className="text-slate-400 text-sm font-medium mb-1">Each round:</p>
-            <ol className="text-slate-400 text-sm list-decimal list-inside space-y-1 mb-0 pl-1">
+            <p className="text-white text-sm font-medium mb-1">Each round:</p>
+            <ol className="text-white text-sm list-decimal list-inside space-y-1 mb-0 pl-1">
               <li>Each Pip starts with a PTR of 12%</li>
               <li>Neighboring Pips interact with each other (or don&apos;t)</li>
               <li>They have a chance (PTR %) to reproduce </li>
@@ -137,7 +137,7 @@ export function Stage2Homogeneous() {
               <li>PTRs reset to 12% for the next round. Repeat.</li>
             </ol>
           </div>
-          <p className="text-slate-400 text-center max-w-xl">
+          <p className="text-white text-center max-w-xl">
             Let&apos;s see how each strategy survives on it&apos;s own!{' '}
             <span style={{ color: STRATEGY_COLORS.altruist }}>Altruists</span> and{' '}
             <span style={{ color: STRATEGY_COLORS.ethnocentric }}>Ethnocentrists</span> help each other and thus thrive.{' '}
@@ -163,7 +163,7 @@ export function Stage2Homogeneous() {
               </button>
             </div>
             <div className="flex items-center gap-2">
-              <label htmlFor="stage2-speed" className="text-slate-400 text-sm whitespace-nowrap">
+              <label htmlFor="stage2-speed" className="text-white text-sm whitespace-nowrap">
                 Speed
               </label>
               <input
@@ -174,14 +174,14 @@ export function Stage2Homogeneous() {
                 step={1}
                 value={speedSlider}
                 onChange={(e) => setSpeedSlider(Number(e.target.value))}
-                className="w-28 h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-sky-500"
+                className="w-28 accent-sky-500"
               />
-              <span className="text-slate-300 text-sm tabular-nums min-w-[1.5rem]">
+              <span className="text-xs text-slate-200 tabular-nums min-w-[1.5rem]">
                 {speedSlider}
               </span>
             </div>
           </div>
-          <p className="text-slate-500 text-xs italic text-center max-w-lg mt-2">
+          <p className="text-slate-200 text-xs italic text-center max-w-lg mt-2">
             *Note: Due to randomness, sometimes the{' '}
             <span style={{ color: STRATEGY_COLORS.altruist }}>Altruists</span>/
             <span style={{ color: STRATEGY_COLORS.ethnocentric }}>Ethnocentrists</span> go extinct... reset and try the simulation a few times and you will see their strategies usually prevail.

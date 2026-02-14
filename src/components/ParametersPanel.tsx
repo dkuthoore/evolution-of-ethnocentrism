@@ -21,7 +21,7 @@ const STAGE1_DEFECTION_LINE =
   'Defection is always the individually rational choice in a single interaction (you either free-ride or avoid being exploited), but mutual cooperation beats mutual defection.';
 
 const STAGE1_PD_VARIABLES = (
-  <div className="text-slate-400 text-xs space-y-1.5">
+  <div className="text-white text-xs space-y-1.5">
     <div className="space-y-0.5 pl-0.5 leading-relaxed">
       <em>B</em> = benefit to recipient<br />
       <em>C</em> = cost to donor<br />
@@ -60,7 +60,7 @@ function PayoffMatrix({ revealedCells }: { revealedCells?: Set<Stage1MatrixCell>
   const net = NET_CC.toFixed(2);
   const cost = COST.toFixed(2);
   const benefit = BENEFIT.toFixed(2);
-  const empty = <span className="text-slate-500">—</span>;
+  const empty = <span className="text-slate-200">—</span>;
   const show = (cell: Stage1MatrixCell) => revealedCells?.has(cell) ?? false;
   const allFourRevealed =
     revealedCells?.size === 4 &&
@@ -68,7 +68,7 @@ function PayoffMatrix({ revealedCells }: { revealedCells?: Set<Stage1MatrixCell>
   return (
     <div className="absolute right-12 top-1/2 -translate-y-1/2 w-64 z-10">
       <h3 className="text-sm font-semibold text-white mb-2 text-center">Payoff matrix (PTR change)</h3>
-      <p className="text-xs text-slate-400 text-center mb-2">(A, B)</p>
+      <p className="text-xs text-white text-center mb-2">(A, B)</p>
       <div className="rounded-lg border border-slate-700 overflow-hidden">
         <table className="w-full text-xs">
           <colgroup>
@@ -77,7 +77,7 @@ function PayoffMatrix({ revealedCells }: { revealedCells?: Set<Stage1MatrixCell>
             <col className="w-auto" />
           </colgroup>
           <thead>
-            <tr className="bg-slate-800 text-slate-300">
+            <tr className="bg-slate-800 text-white">
               <th className="w-24" />
               <th className="px-2 py-2 text-center font-medium">B cooperates</th>
               <th className="px-2 py-2 text-center font-medium">B defects</th>
@@ -85,7 +85,7 @@ function PayoffMatrix({ revealedCells }: { revealedCells?: Set<Stage1MatrixCell>
           </thead>
           <tbody className="tabular-nums">
             <tr className="border-t border-slate-700">
-              <td className="px-2 py-2 bg-slate-800 text-slate-300 font-medium">A cooperates</td>
+              <td className="px-2 py-2 bg-slate-800 text-white font-medium">A cooperates</td>
               <td className="px-2 py-2 text-center bg-slate-800/80">
                 {show('cc') ? <span className="text-emerald-400">+{net}, +{net}</span> : empty}
               </td>
@@ -96,21 +96,21 @@ function PayoffMatrix({ revealedCells }: { revealedCells?: Set<Stage1MatrixCell>
               </td>
             </tr>
             <tr className="border-t border-slate-700">
-              <td className="px-2 py-2 bg-slate-800 text-slate-300 font-medium">A defects</td>
+              <td className="px-2 py-2 bg-slate-800 text-white font-medium">A defects</td>
               <td className="px-2 py-2 text-center bg-slate-800/80">
                 {show('dc') ? (
                   <><span className="text-emerald-400">+{benefit}</span>, <span className="text-rose-400">−{cost}</span></>
                 ) : empty}
               </td>
               <td className="px-2 py-2 text-center bg-slate-800/80">
-                {show('dd') ? <span className="text-slate-400">0, 0</span> : empty}
+                {show('dd') ? <span className="text-white">0, 0</span> : empty}
               </td>
             </tr>
           </tbody>
         </table>
       </div>
       {allFourRevealed && (
-        <p className="text-slate-400 text-xs text-center mt-3">{STAGE1_DEFECTION_LINE}</p>
+        <p className="text-white text-xs text-center mt-3">{STAGE1_DEFECTION_LINE}</p>
       )}
     </div>
   );
@@ -191,7 +191,7 @@ function EditableParametersTable({
   return (
     <div className="absolute right-12 top-1/2 -translate-y-1/2 w-80 z-10 max-h-[85vh] overflow-y-auto">
       <h3 className="text-sm font-semibold text-white text-center mb-2">Parameters</h3>
-      <div className="text-slate-400 text-xs mb-3 space-y-1.5">
+      <div className="text-white text-xs mb-3 space-y-1.5">
         <p className="font-semibold text-white">Prisoner&apos;s Dilemma Variables</p>
         <div className="space-y-0.5 pl-0.5 leading-relaxed">
           <em>B</em> = benefit to recipient<br />
@@ -230,7 +230,7 @@ function EditableParametersTable({
             <col className="w-24" />
           </colgroup>
           <thead>
-            <tr className="bg-slate-800 text-slate-300">
+            <tr className="bg-slate-800 text-white">
               <th className="px-2 py-1.5 text-left font-medium">Param</th>
               <th className="px-2 py-1.5 text-left font-medium">What it does</th>
               <th className="px-2 py-1.5 text-left font-medium">Value</th>
@@ -244,7 +244,7 @@ function EditableParametersTable({
               return (
                 <tr key={key} className="border-t border-slate-700">
                   <td className="px-2 py-1.5 text-slate-200 font-medium">{label}</td>
-                  <td className="px-2 py-1.5 text-slate-400">{description}</td>
+                  <td className="px-2 py-1.5 text-white">{description}</td>
                   <td className="px-2 py-1">
                     <input
                       type="text"
@@ -292,7 +292,7 @@ function ParametersTable({
             <col className="w-auto" />
           </colgroup>
           <thead>
-            <tr className="bg-slate-800 text-slate-300">
+            <tr className="bg-slate-800 text-white">
               <th className="px-2 py-1.5 text-left font-medium">Param</th>
               <th className="px-2 py-1.5 text-left font-medium">What it does</th>
             </tr>
@@ -301,7 +301,7 @@ function ParametersTable({
             {parameters.map(({ param, description }) => (
               <tr key={param} className="border-t border-slate-700">
                 <td className="px-2 py-1.5 text-slate-200 font-medium">{param}</td>
-                <td className="px-2 py-1.5 text-slate-400">{description}</td>
+                <td className="px-2 py-1.5 text-white">{description}</td>
               </tr>
             ))}
           </tbody>
@@ -340,12 +340,12 @@ function Stage3CasePanel({ selectedCaseId }: { selectedCaseId: ClashCaseId }) {
       <h3 className="text-sm font-semibold text-white mb-2 text-center">Case</h3>
       <div className="rounded-lg border border-slate-700 bg-slate-800/90 overflow-hidden space-y-0">
         <div className="px-3 py-2 border-b border-slate-700">
-          <h4 className="text-xs font-semibold text-slate-300 mb-1">What happens</h4>
-          <p className="text-slate-400 text-xs leading-relaxed">{selectedCase.whatHappens}</p>
+          <h4 className="text-xs font-semibold text-white mb-1">What happens</h4>
+          <p className="text-white text-xs leading-relaxed">{selectedCase.whatHappens}</p>
         </div>
         <div className="px-3 py-2">
-          <h4 className="text-xs font-semibold text-slate-300 mb-1">What this demonstrates</h4>
-          <p className="text-slate-400 text-xs leading-relaxed">{selectedCase.implication}</p>
+          <h4 className="text-xs font-semibold text-white mb-1">What this demonstrates</h4>
+          <p className="text-white text-xs leading-relaxed">{selectedCase.implication}</p>
         </div>
       </div>
     </div>

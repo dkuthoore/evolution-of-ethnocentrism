@@ -20,16 +20,18 @@ export function Stage4Population() {
   }, [distribution]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col items-center gap-4 px-4 overflow-hidden">
+    <div className="flex min-h-0 flex-1 flex-col px-4 overflow-hidden">
       <div className="shrink-0 pt-4 h-16 w-full">
         <h2 className="text-2xl font-bold text-white text-center">Population Dynamics</h2>
       </div>
-      <div className="flex-shrink-0 max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-4 py-3">
-        <p className="text-slate-300 text-center text-sm">
-          Now let&apos;s put all four strategies in one world. Choose a starting mix and hit Play to run. We also add two new forces to the simulation: <strong className="text-slate-200">mutation rate</strong> and <strong className="text-slate-200">immigration rate</strong>. Watch how the mix evolves and which strategy wins.
-        </p>
-      </div>
-      <div className="flex min-h-0 flex-1 flex-col items-center min-w-0 w-full max-w-4xl">
+      <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-4">
+        <div className="flex flex-col items-center gap-4 shrink-0 w-full max-w-4xl">
+          <div className="flex-shrink-0 max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-4 py-3">
+            <p className="text-white text-center text-sm">
+              Now let&apos;s put all four strategies in one world. Choose a starting mix and hit Play to run. We also add two new forces to the simulation: <strong className="text-slate-200">mutation rate</strong> and <strong className="text-slate-200">immigration rate</strong>. Watch how the mix evolves and which strategy wins.
+            </p>
+          </div>
+          <div className="flex min-h-0 flex-1 flex-col items-center min-w-0 w-full max-w-4xl">
         <SimulationWidget
         gridW={25}
         gridH={25}
@@ -60,6 +62,8 @@ export function Stage4Population() {
         onReady={onReady}
         onReset={() => simApiRef.current?.seedByDistribution(distribution, FILL_RATIO)}
       />
+          </div>
+        </div>
       </div>
     </div>
   );
