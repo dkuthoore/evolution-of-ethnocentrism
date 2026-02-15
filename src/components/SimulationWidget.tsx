@@ -187,12 +187,12 @@ export function SimulationWidget({
       <div className="flex flex-col gap-2 items-start shrink-0" style={{ minWidth: canvasSize }}>
         {allowPainting && (
           <div className="flex gap-2 items-center flex-wrap">
-            <button onClick={() => setActiveTool('none')} className={`p-2 rounded ${activeTool === 'none' ? 'bg-slate-600' : 'bg-slate-700'}`}>—</button>
-            <button onClick={() => setActiveTool('brush')} className={`p-2 rounded ${activeTool === 'brush' ? 'bg-blue-600' : 'bg-slate-700'}`}><Pencil size={18} /></button>
-            <button onClick={() => setActiveTool('meteor')} className={`p-2 rounded ${activeTool === 'meteor' ? 'bg-amber-600' : 'bg-slate-700'}`}><Flame size={18} /></button>
-            <button onClick={() => setActiveTool('inspect')} className={`p-2 rounded ${activeTool === 'inspect' ? 'bg-emerald-600' : 'bg-slate-700'}`}><Search size={18} /></button>
+            <button onClick={() => setActiveTool('none')} className={`btn-interactive p-2 rounded transition-colors duration-150 ${activeTool === 'none' ? 'bg-slate-600 ring-2 ring-slate-500/50' : 'bg-slate-700 hover:bg-slate-600'}`}>—</button>
+            <button onClick={() => setActiveTool('brush')} className={`btn-interactive p-2 rounded transition-colors duration-150 ${activeTool === 'brush' ? 'bg-blue-600 ring-2 ring-blue-400/50' : 'bg-slate-700 hover:bg-slate-600'}`}><Pencil size={18} /></button>
+            <button onClick={() => setActiveTool('meteor')} className={`btn-interactive p-2 rounded transition-colors duration-150 ${activeTool === 'meteor' ? 'bg-amber-600 ring-2 ring-amber-400/50' : 'bg-slate-700 hover:bg-slate-600'}`}><Flame size={18} /></button>
+            <button onClick={() => setActiveTool('inspect')} className={`btn-interactive p-2 rounded transition-colors duration-150 ${activeTool === 'inspect' ? 'bg-emerald-600 ring-2 ring-emerald-400/50' : 'bg-slate-700 hover:bg-slate-600'}`}><Search size={18} /></button>
             {activeTool === 'brush' && (
-              <select value={brushPhenotype} onChange={(e) => setBrushPhenotype(e.target.value as Phenotype)} className="bg-slate-700 rounded px-2 py-1 text-sm">
+              <select value={brushPhenotype} onChange={(e) => setBrushPhenotype(e.target.value as Phenotype)} className="bg-slate-700 rounded px-2 py-1 text-sm transition-colors duration-150">
                 {(['ethnocentric', 'altruist', 'egoist', 'traitor'] as const).map((p) => (
                   <option key={p} value={p}>{p}</option>
                 ))}
@@ -203,7 +203,7 @@ export function SimulationWidget({
         <div className="flex gap-2 items-center flex-nowrap">
           <button
             onClick={sim.isRunning ? sim.pause : sim.play}
-            className={`inline-flex items-center justify-center gap-2 w-28 shrink-0 px-4 py-2 rounded-lg text-white font-medium ${
+            className={`btn-interactive inline-flex items-center justify-center gap-2 w-28 shrink-0 px-4 py-2 rounded-lg text-white font-medium transition-colors duration-150 ${
               playPauseVariant === 'greenRed'
                 ? sim.isRunning
                   ? 'bg-red-600 hover:bg-red-500'
@@ -216,14 +216,14 @@ export function SimulationWidget({
           </button>
           <button
             onClick={handleReset}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded-lg text-white"
+            className="btn-interactive flex items-center gap-2 px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded-lg text-white transition-colors duration-150"
           >
             <RotateCcw size={18} />
             Reset
           </button>
           {extraControls}
         </div>
-        <div className={`relative bg-slate-800 rounded-lg overflow-hidden border border-slate-700 inline-block ${spaceBeforeCanvas === 'large' ? 'mt-2' : ''}`}>
+        <div className={`relative bg-slate-800 rounded-lg overflow-hidden border border-slate-700 inline-block transition-shadow duration-300 ${sim.isRunning ? 'shadow-[0_0_24px_rgba(14,165,233,0.12)]' : ''} ${spaceBeforeCanvas === 'large' ? 'mt-2' : ''}`}>
           <canvas
             ref={canvasRef}
             width={canvasSize}

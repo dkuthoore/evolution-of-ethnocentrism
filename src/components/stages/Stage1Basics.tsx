@@ -216,19 +216,19 @@ export function Stage1Basics({ onCooperate, onScenarioClick }: Stage1BasicsProps
           <div className="flex flex-wrap gap-3 justify-center">
             <button
               onClick={handleBothCooperate}
-              className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white font-semibold text-sm transition-colors"
+              className="btn-interactive px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white font-semibold text-sm transition-colors duration-150"
             >
               Both cooperate
             </button>
             <button
               onClick={handleOneCooperateOneDefect}
-              className="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 rounded-lg text-white font-semibold text-sm transition-colors"
+              className="btn-interactive px-5 py-2.5 bg-amber-600 hover:bg-amber-500 rounded-lg text-white font-semibold text-sm transition-colors duration-150"
             >
               One cooperates, one defects
             </button>
             <button
               onClick={handleBothDefect}
-              className="px-5 py-2.5 bg-slate-600 hover:bg-slate-500 rounded-lg text-white font-semibold text-sm transition-colors"
+              className="btn-interactive px-5 py-2.5 bg-slate-600 hover:bg-slate-500 rounded-lg text-white font-semibold text-sm transition-colors duration-150"
             >
               Both defect
             </button>

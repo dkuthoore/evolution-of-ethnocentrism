@@ -1,3 +1,4 @@
+import { motion, useReducedMotion } from 'framer-motion';
 import { STRATEGY_COLORS } from '../lib/constants';
 import type { Phenotype } from '../lib/constants';
 
@@ -16,18 +17,39 @@ const LEGEND_ITEMS: { phenotype: Phenotype; definition: string }[] = [
 ];
 
 export function SidebarLegend() {
+  const reducedMotion = useReducedMotion();
+
   return (
     <aside
       className="absolute left-12 top-1/2 -translate-y-1/2 w-64 px-3 py-4 z-10"
       role="navigation"
       aria-label="Pip strategy legend"
     >
-      <div className="flex flex-col gap-2">
+      <motion.div
+        className="flex flex-col gap-2"
+        initial="hidden"
+        animate="visible"
+        variants={
+          reducedMotion
+            ? undefined
+            : {
+                visible: { transition: { staggerChildren: 0.05, delayChildren: 0.05 } },
+                hidden: {},
+              }
+        }
+      >
         {LEGEND_ITEMS.map(({ phenotype, definition }) => (
-          <div
+          <motion.div
             key={phenotype}
-            className="flex flex-col justify-center gap-1 rounded-lg bg-slate-800 px-3 py-2 h-14"
+            className="flex flex-col justify-center gap-1 rounded-lg bg-slate-800/90 px-3 py-2 h-14 border-l-2 border-slate-700 transition-colors duration-200"
+            style={{ borderLeftColor: STRATEGY_COLORS[phenotype] }}
             role="listitem"
+            variants={
+              reducedMotion
+                ? undefined
+                : { hidden: { opacity: 0, x: -8 }, visible: { opacity: 1, x: 0 } }
+            }
+            transition={{ duration: 0.2 }}
           >
             <div className="flex items-center gap-2">
               <span
@@ -43,9 +65,9 @@ export function SidebarLegend() {
               </span>
             </div>
             <span className="text-slate-200 text-xs">{definition}</span>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </aside>
   );
 }

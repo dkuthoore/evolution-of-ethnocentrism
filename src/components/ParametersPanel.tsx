@@ -217,7 +217,7 @@ function EditableParametersTable({
         <button
           type="button"
           onClick={handleReset}
-          className="px-2 py-1 text-xs font-medium rounded bg-slate-600 hover:bg-slate-500 text-white"
+          className="btn-interactive px-2 py-1 text-xs font-medium rounded bg-slate-600 hover:bg-slate-500 text-white transition-colors duration-150"
         >
           Reset
         </button>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { HeaderLegend } from './components/HeaderLegend';
 import { HomePage } from './components/HomePage';
 import { ParametersPanel, Stage1LeftPanel } from './components/ParametersPanel';
@@ -24,6 +25,7 @@ import type { Stage1MatrixCell } from './components/ParametersPanel';
 import type { ClashCaseId } from './components/stages/Stage3Clash';
 
 function App() {
+  const reducedMotion = useReducedMotion();
   const [currentStage, setCurrentStage] = useState(0);
   const [stage1RevealedCells, setStage1RevealedCells] = useState<Set<Stage1MatrixCell>>(new Set());
   const [stage3CaseId, setStage3CaseId] = useState<ClashCaseId>('altruist-vs-egoist');
@@ -68,20 +70,31 @@ function App() {
         <main
           className={`flex min-h-0 flex-1 flex-col overflow-hidden ${useSymmetricLayout ? 'ml-80 mr-80' : ''}`}
         >
-          {currentStage === 1 && (
-            <Stage1Basics onScenarioClick={revealStage1Cell} />
-          )}
-          {currentStage === 2 && <Stage2Homogeneous />}
-          {currentStage === 3 && (
-            <Stage3Clash
-              selectedCaseId={stage3CaseId}
-              onCaseChange={setStage3CaseId}
-            />
-          )}
-          {currentStage === 4 && <Stage4Population />}
-          {currentStage === 5 && <Stage5Evolution />}
-          {currentStage === 6 && <Stage6GodMode params={stage6Params} />}
-          {currentStage === 7 && <Stage7Takeaways />}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStage}
+              initial={reducedMotion ? undefined : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reducedMotion ? undefined : { opacity: 0, y: -8 }}
+              transition={{ duration: reducedMotion ? 0 : 0.2 }}
+              className="flex min-h-0 flex-1 flex-col overflow-hidden"
+            >
+              {currentStage === 1 && (
+                <Stage1Basics onScenarioClick={revealStage1Cell} />
+              )}
+              {currentStage === 2 && <Stage2Homogeneous />}
+              {currentStage === 3 && (
+                <Stage3Clash
+                  selectedCaseId={stage3CaseId}
+                  onCaseChange={setStage3CaseId}
+                />
+              )}
+              {currentStage === 4 && <Stage4Population />}
+              {currentStage === 5 && <Stage5Evolution />}
+              {currentStage === 6 && <Stage6GodMode params={stage6Params} />}
+              {currentStage === 7 && <Stage7Takeaways />}
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
       <FooterNav stage={currentStage} setStage={setCurrentStage} total={TOTAL_STAGES} />

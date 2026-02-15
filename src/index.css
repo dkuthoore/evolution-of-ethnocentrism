@@ -41,3 +41,24 @@ canvas {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Shared button transition and active state */
+.btn-interactive {
+  transition: color 0.15s ease, background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+.btn-interactive:active:not(:disabled) {
+  transform: scale(0.98);
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-interactive {
+    transition: none;
+  }
+  .btn-interactive:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Range inputs: smooth thumb */
+input[type="range"] {
+  transition: opacity 0.15s ease;
+}

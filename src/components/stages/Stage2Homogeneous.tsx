@@ -153,11 +153,11 @@ export function Stage2Homogeneous() {
             <div className="flex gap-2">
               <button
                 onClick={isPlaying ? pauseAll : playAll}
-                className={`px-4 py-2 text-sm rounded text-white font-medium ${isPlaying ? 'bg-red-600 hover:bg-red-500' : 'bg-green-600 hover:bg-green-500'}`}
+                className={`btn-interactive px-4 py-2 text-sm rounded text-white font-medium transition-colors duration-150 ${isPlaying ? 'bg-red-600 hover:bg-red-500' : 'bg-green-600 hover:bg-green-500'}`}
               >
                 {isPlaying ? 'Pause' : 'Play'}
               </button>
-              <button onClick={resetAll} className="px-4 py-2 text-sm bg-slate-600 hover:bg-slate-500 rounded text-white font-medium">
+              <button onClick={resetAll} className="btn-interactive px-4 py-2 text-sm bg-slate-600 hover:bg-slate-500 rounded text-white font-medium transition-colors duration-150">
                 Reset
               </button>
             </div>

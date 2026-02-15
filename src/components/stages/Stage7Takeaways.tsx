@@ -12,7 +12,9 @@ export function Stage7Takeaways() {
   return (
     <div className="h-full flex flex-col px-4 overflow-hidden">
       <div className="shrink-0 pt-4 h-16">
-        <h2 className="text-2xl font-bold text-white text-center">Summary</h2>
+        <h2 className="text-2xl font-bold text-white text-center">
+          Summary
+        </h2>
       </div>
       <div className="flex-1 min-h-0 overflow-auto py-6 scrollbar-hide">
         <div className="max-w-2xl mx-auto w-full space-y-2">
@@ -21,7 +23,7 @@ export function Stage7Takeaways() {
           <button
             type="button"
             onClick={() => toggle('why-matters')}
-            className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-700/30 transition-colors"
+            className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-700/30 transition-colors duration-200"
             aria-expanded={expandedId === 'why-matters'}
           >
             <h3 className="text-lg font-semibold text-white">Why this study matters</h3>
@@ -45,7 +47,7 @@ export function Stage7Takeaways() {
           <button
             type="button"
             onClick={() => toggle('implications')}
-            className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-700/30 transition-colors"
+            className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-700/30 transition-colors duration-200"
             aria-expanded={expandedId === 'implications'}
           >
             <h3 className="text-lg font-semibold text-white">Implications</h3>
@@ -72,7 +74,7 @@ export function Stage7Takeaways() {
           <button
             type="button"
             onClick={() => toggle('where-shows-up')}
-            className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-700/30 transition-colors"
+            className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-700/30 transition-colors duration-200"
             aria-expanded={expandedId === 'where-shows-up'}
           >
             <h3 className="text-lg font-semibold text-white">Where this shows up in society</h3>
@@ -111,7 +113,7 @@ export function Stage7Takeaways() {
           <button
             type="button"
             onClick={() => toggle('evolution-of-trust')}
-            className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-700/30 transition-colors"
+            className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-700/30 transition-colors duration-200"
             aria-expanded={expandedId === 'evolution-of-trust'}
           >
             <h3 className="text-lg font-semibold text-white">How this differs from The Evolution of Trust</h3>
