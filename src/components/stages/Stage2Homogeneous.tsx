@@ -130,9 +130,8 @@ export function Stage2Homogeneous() {
             </p>
             <p className="text-white text-sm font-medium mb-1">Each round:</p>
             <ol className="text-white text-sm list-decimal list-inside space-y-1 mb-0 pl-1">
-              <li>Each Pip starts with a PTR of 12%</li>
-              <li>Neighboring Pips interact with each other (or don&apos;t)</li>
-              <li>They have a chance (PTR %) to reproduce </li>
+              <li>Each Pip starts with a Potential to Reproduce (PTR) of 12%</li>
+              <li>Pips can interact with their neighbors to increase their PTR.</li>
               <li>10% chance each Pip dies on each round</li>
               <li>PTRs reset to 12% for the next round. Repeat.</li>
             </ol>
