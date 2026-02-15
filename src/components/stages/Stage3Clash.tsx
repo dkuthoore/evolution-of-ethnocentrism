@@ -173,7 +173,7 @@ export function Stage3Clash({
         <div className="flex flex-col items-center gap-5 shrink-0">
           <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5">
             <p className="text-white text-center">
-              What happens when <em>two</em> strategies share the same grid? Pick a case below and hit Play.
+              Let&apos;s see what happens when <em>two</em> strategies coexist in the same grid! Pick a case below and hit Play.
             </p>
           </div>
           <SimulationWidget

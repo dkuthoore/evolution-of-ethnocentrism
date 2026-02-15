@@ -314,19 +314,19 @@ function ParametersTable({
 function Stage5KeyTakeaway() {
   return (
     <div className="absolute right-12 top-1/2 -translate-y-1/2 w-72 z-10 max-h-[85vh] overflow-y-auto">
-      <h3 className="text-sm font-semibold text-white mb-3 text-center">💡 Key Takeaways</h3>
+      <h3 className="text-sm font-semibold text-white mb-3 text-center">💡 Observations</h3>
       <ul className="rounded-lg border border-slate-700 bg-slate-800/90 px-3 py-3 space-y-2 list-disc list-inside text-white text-xs leading-relaxed">
         <li>
-          <strong className="text-slate-200">Tags are meaningless.</strong> In the model they carry no information about behavior—yet they still drive discrimination. Prejudice can be stable even when the distinction is superficial.
+          <strong className="text-slate-200">Tags are independent of strategy.</strong> A Pip's color doesn't dictate how it behaves; any strategy can be paired with any tag.
         </li>
         <li>
-          <strong className="text-slate-200">The tag creates the reality.</strong> Once a tag exists and ethnocentrists cluster around it, the dynamic becomes self-sustaining—whether or not the original distinction was meaningful.
+          <strong className="text-slate-200">Ethnocentrism dominates.</strong> Notice how clusters form for each color, where almost all Pips eventually have black dots (the ethnocentric markers).
         </li>
         <li>
-          <strong className="text-slate-200">Ethnocentrism is not globally optimal.</strong> Universal cooperation would maximize welfare. Ethnocentrism locks everyone into a lower-welfare equilibrium—like an arms race where neither side can drop their guard.
+          <strong className="text-slate-200">Self-Sustaining Clusters.</strong> Once a tag-based group forms, they support their own kind and resist "invasion" from other strategies, regardless of the tag's meaning.
         </li>
         <li>
-          <strong className="text-slate-200">Where this shows up:</strong> religion, nationalism, politics (red vs. blue), gangs, corporate tribalism, sports fandom—same structure of in-group cooperation and out-group defection.
+          <strong className="text-slate-200">The Power of Visibility.</strong> Because Pips can see tags but not strategies, they use color as a proxy for trust, creating the "us vs. them" dynamic you see on the grid.
         </li>
       </ul>
     </div>

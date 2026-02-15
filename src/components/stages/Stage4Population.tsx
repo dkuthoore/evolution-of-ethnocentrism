@@ -28,7 +28,7 @@ export function Stage4Population() {
         <div className="flex flex-col items-center gap-4 shrink-0 w-full max-w-4xl">
           <div className="flex-shrink-0 max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-4 py-3">
             <p className="text-white text-center text-sm">
-              Now let&apos;s put all four strategies in one world. Choose a starting mix and hit Play to run. We also add two new forces to the simulation: <strong className="text-slate-200">mutation rate</strong> and <strong className="text-slate-200">immigration rate</strong>. Watch how the mix evolves and which strategy wins.
+              Now let&apos;s put all four strategies in one world. We also add two new forces to the simulation: <strong className="text-slate-200">mutation rate</strong> and <strong className="text-slate-200">immigration rate</strong>. Watch how the mix evolves and which strategy wins.
             </p>
           </div>
           <div className="flex min-h-0 flex-1 flex-col items-center min-w-0 w-full max-w-4xl">

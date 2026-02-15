@@ -126,14 +126,14 @@ export function Stage2Homogeneous() {
         <div className="flex flex-col items-center gap-5 shrink-0">
           <div className="max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-4 py-3">
             <p className="text-white text-center text-sm mb-2">
-              Now let&apos;s run a simple simulation.
+              Now let&apos;s run a simplified simulation to understand the 4 strategies.
             </p>
             <p className="text-white text-sm font-medium mb-1">Each round:</p>
             <ol className="text-white text-sm list-decimal list-inside space-y-1 mb-0 pl-1">
               <li>Each Pip starts with a Potential to Reproduce (PTR) of 12%</li>
-              <li>Pips can interact with their neighbors to increase their PTR.</li>
-              <li>10% chance each Pip dies on each round</li>
-              <li>PTRs reset to 12% for the next round. Repeat.</li>
+              <li>Pips interact with their neighbors in a Prisoner's Dilemma, which can change their PTR.</li>
+              <li>There is a 10% chance each Pip dies.</li>
+              <li>PTRs reset to 12% for the next round and we repeat.</li>
             </ol>
           </div>
           <p className="text-white text-center max-w-xl">
