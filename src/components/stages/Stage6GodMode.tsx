@@ -35,7 +35,7 @@ export function Stage6GodMode({ params }: { params: SimulationParams }) {
         <div className="flex flex-col items-center gap-4 shrink-0 w-full max-w-4xl">
           <div className="flex-shrink-0 max-w-xl w-full rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-5">
             <p className="text-white text-center">
-              Feel free to tweak parameters, make your own simulations, see what you find!
+              The end! Feel free to play around: tweak parameters, make your own simulations, see what you patterns you find! Head to the next stage to see a summary of the paper's key findings and how this relates to the real world.
             </p>
           </div>
           <div className="flex min-h-0 flex-1 flex-col items-center min-w-0 w-full max-w-4xl">

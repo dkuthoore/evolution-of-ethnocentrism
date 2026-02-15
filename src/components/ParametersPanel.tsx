@@ -317,7 +317,7 @@ function Stage5KeyTakeaway() {
       <h3 className="text-sm font-semibold text-white mb-3 text-center">💡 Observations</h3>
       <ul className="rounded-lg border border-slate-700 bg-slate-800/90 px-3 py-3 space-y-2 list-disc list-inside text-white text-xs leading-relaxed">
         <li>
-          <strong className="text-slate-200">Tags are independent of strategy.</strong> A Pip's color doesn't dictate how it behaves; any strategy can be paired with any tag.
+          <strong className="text-slate-200">Tags are independent of strategy.</strong> The population by color does not change as drastically as the population by strategy. The tags are essentially meaningless. 
         </li>
         <li>
           <strong className="text-slate-200">Ethnocentrism dominates.</strong> Notice how clusters form for each color, where almost all Pips eventually have black dots (the ethnocentric markers).
