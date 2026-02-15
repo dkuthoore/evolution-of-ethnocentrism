@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-type AccordionId = 'why-matters' | 'implications' | 'where-shows-up' | 'evolution-of-trust' | null;
+type AccordionId = 'why-matters' | 'implications' | 'policy-implications' | 'where-shows-up' | 'evolution-of-trust' | null;
 
 export function Stage7Takeaways() {
   const [expandedId, setExpandedId] = useState<AccordionId>(null);
@@ -39,6 +39,9 @@ export function Stage7Takeaways() {
           <p className="text-white text-sm">
             The mechanism is surprisingly simple: agents who cooperate with their own group and defect against others tend to cluster together, which means they receive cooperation often while being shielded from exploitation. Over time, this strategy out-competes both unconditional cooperators (who get taken advantage of) and unconditional defectors (who cooperate with no one). No culture, no cognition, no kinship required — just a tag and a population.
           </p>
+          <p className="text-white text-sm">
+            The paper deliberately omits the usual mechanisms that support cooperation in society: reciprocity (repeated interaction), institutions, reputation, strong norms. It shows that in-group favoritism can sustain high levels of cooperation <em>without</em> any of those — with minimal cognitive requirements. That helps explain why this predisposition might have evolved, and why it is so easily triggered when other social mechanisms (institutions, reciprocity, trust) are weak or absent.
+          </p>
             </div>
           )}
         </section>
@@ -66,6 +69,36 @@ export function Stage7Takeaways() {
           <p className="text-white text-sm">
             <strong className="text-slate-200">Evolution doesn&apos;t optimize for the common good.</strong> What wins in the simulation isn&apos;t what&apos;s best for the group as a whole — it&apos;s what&apos;s hardest to exploit. That distinction matters enormously for how we think about human nature. Our tribal instincts aren&apos;t a design flaw or a cultural artifact. They&apos;re the predictable output of a selection process that rewards competitive survival, not collective flourishing.
           </p>
+          <p className="text-white text-sm">
+            <strong className="text-slate-200">Discrimination pays off more when cooperation is costly.</strong> In the model, the ability to discriminate is especially helpful in &quot;austere&quot; environments — when the individual cost of cooperation is high. So reducing the cost of cooperation (or increasing its benefits) can reduce the value added of discriminatory behavior. The paper suggests this as one direction for policy: make cooperation cheaper and ethnocentrism becomes less necessary.
+          </p>
+            </div>
+          )}
+        </section>
+
+        <section className="rounded-xl bg-slate-800/50 border border-slate-700 overflow-hidden">
+          <button
+            type="button"
+            onClick={() => toggle('policy-implications')}
+            className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-700/30 transition-colors duration-200"
+            aria-expanded={expandedId === 'policy-implications'}
+          >
+            <h3 className="text-lg font-semibold text-white">Policy implications</h3>
+            <span className="text-white shrink-0 ml-2" aria-hidden>
+              {expandedId === 'policy-implications' ? '▼' : '▶'}
+            </span>
+          </button>
+          {expandedId === 'policy-implications' && (
+            <div className="px-6 pb-5 pt-0 border-t border-slate-700 space-y-4 pt-3">
+          <p className="text-white text-sm">
+            The authors stress that group distinctions in the model are based on a single abstract trait (tag) — and that in reality such distinctions are <strong className="text-slate-200">socially constructed</strong>. Broadening the boundaries of who is perceived as the in-group is one important policy approach to reducing ethnocentric behavior.
+          </p>
+          <p className="text-white text-sm">
+            Because ethnocentrism thrives when other mechanisms for cooperation are absent, <strong className="text-slate-200">strengthening institutions, repeated interaction, and strong norms</strong> can lower reliance on in-group favoritism. Where those conditions exist, society may need tag-based cooperation less.
+          </p>
+          <p className="text-white text-sm">
+            The model also speaks to Putnam&apos;s idea of &quot;bonding&quot; vs. &quot;bridging&quot; social capital. Ethnocentrism easily creates <strong className="text-slate-200">bonding</strong> capital within groups. Efforts to reduce discrimination might focus on creating <strong className="text-slate-200">bridging</strong> capital between groups — opportunities for cross-group cooperation and contact — as well.
+          </p>
             </div>
           )}
         </section>
@@ -85,7 +118,7 @@ export function Stage7Takeaways() {
           {expandedId === 'where-shows-up' && (
             <div className="px-6 pb-5 pt-0 border-t border-slate-700 space-y-4 pt-3">
           <p className="text-white text-sm">
-            Once you see the pattern — arbitrary tag, in-group cooperation, out-group defection, self-reinforcing dynamic — it&apos;s hard to unsee it. It appears across vastly different contexts, which is what makes the model so powerful.
+            Once you see the pattern — arbitrary tag, in-group cooperation, out-group defection, self-reinforcing dynamic — it&apos;s hard to unsee it. It appears across vastly different contexts, which is what makes the model so powerful. The paper notes that manipulating such differences is often a powerful political strategy, precisely because the predisposition to favor in-groups is so easily triggered.
           </p>
           <p className="text-white text-sm">
             <strong className="text-slate-200">Religion</strong> uses costly signals (dietary laws, dress codes, rituals) as tags. These signals are expensive enough that only committed members maintain them, which makes them reliable filters for finding trustworthy cooperators. The result is tight internal solidarity and sharp boundaries against outsiders.
