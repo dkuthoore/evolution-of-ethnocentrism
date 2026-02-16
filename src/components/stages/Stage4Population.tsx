@@ -22,7 +22,7 @@ export function Stage4Population() {
   return (
     <div className="flex min-h-0 flex-1 flex-col px-4 overflow-hidden">
       <div className="shrink-0 pt-4 h-16 w-full">
-        <h2 className="text-2xl font-bold text-white text-center">Population Dynamics</h2>
+        <h2 className="text-2xl font-bold text-white text-center">Four Pips Clash</h2>
       </div>
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-4">
         <div className="flex flex-col items-center gap-4 shrink-0 w-full max-w-4xl">
