@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { HeaderLegend } from './components/HeaderLegend';
 import { HomePage } from './components/HomePage';
+import { PipBackground } from './components/PipBackground';
 import { ParametersPanel, Stage1LeftPanel } from './components/ParametersPanel';
 import { SidebarLegend } from './components/SidebarLegend';
 import { FooterNav } from './components/FooterNav';
+import { useIsDesktop } from './hooks/useIsDesktop';
 import { DEFAULT_PARAMS } from './lib/constants';
 import type { SimulationParams } from './lib/constants';
 import {
@@ -25,11 +27,14 @@ import type { Stage1MatrixCell } from './components/ParametersPanel';
 import type { ClashCaseId } from './components/stages/Stage3Clash';
 
 function App() {
+  const isDesktop = useIsDesktop();
   const reducedMotion = useReducedMotion();
   const [currentStage, setCurrentStage] = useState(0);
   const [stage1RevealedCells, setStage1RevealedCells] = useState<Set<Stage1MatrixCell>>(new Set());
   const [stage3CaseId, setStage3CaseId] = useState<ClashCaseId>('altruist-vs-egoist');
   const [stage6Params, setStage6Params] = useState<SimulationParams>(() => ({ ...DEFAULT_PARAMS }));
+  const desktopOnlyTitleRef = useRef<HTMLHeadingElement>(null);
+  const desktopOnlyMessageRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     if (currentStage !== 1) setStage1RevealedCells(new Set());
@@ -38,6 +43,22 @@ function App() {
   const revealStage1Cell = (cell: Stage1MatrixCell) => {
     setStage1RevealedCells((prev) => new Set(prev).add(cell));
   };
+
+  if (!isDesktop) {
+    return (
+      <div className="relative flex min-h-screen w-screen flex-col overflow-hidden bg-slate-900 text-white">
+        <PipBackground obstacleRefs={[desktopOnlyTitleRef, desktopOnlyMessageRef]} />
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center">
+          <h1 ref={desktopOnlyTitleRef} className="text-3xl font-bold text-white">
+            The Evolution of Ethnocentrism
+          </h1>
+          <p ref={desktopOnlyMessageRef} className="max-w-md text-lg leading-relaxed text-white">
+            This simulation is best viewed on a computer. Please open it on a desktop or laptop for the full experience.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (currentStage === 0) {
     return (

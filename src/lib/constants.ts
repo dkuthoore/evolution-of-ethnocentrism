@@ -1,3 +1,6 @@
+// Minimum viewport width (px) to show the full app; below this we show a "desktop only" message
+export const MIN_DESKTOP_WIDTH_PX = 1440;
+
 // Grid dimensions (default sandbox)
 export const GRID_W = 50;
 export const GRID_H = 50;
